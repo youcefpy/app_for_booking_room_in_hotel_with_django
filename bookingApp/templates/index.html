@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+
+    <h1>My home Page</h1>
+    <p>Welcome to my home page</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Space</th>
+                <th>Beds</th>
+                <th>Address</th>
+                <th>State</th>
+                <th>Bath</th>
+            </tr>
+        </thead>
+        {% for appart in appartement  %}
+            <tbody>
+                <tr>
+                    <td>{{ appart.id }}</td>
+                    <td>{{ apaprt.space }}</td>
+                    <td>{{ appart.beds }}</td>
+                    <td>{{ appart.address }}</td>
+                    <td>{{ appart.state }}</td>
+                    <td>{{ appart.bath }}</td>
+                </tr>
+            </tbody> 
+        {% endfor %}
+    </table>  
+    <br/>
+    <br/>
+    
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4 appart-card-index"> 
+            {% for appart in appartement  %}        
+                <div class="col">
+                    <a href="{% url 'appartDetails' appart.id %}" class="card-appart">
+                        <div class="card">
+                            <img src="{{ appart.image_appart.url }}" height="300px" class="card-img-top img-apprat-index"  alt="Image Appartement">
+                            <hr/>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ appart.state }}</h5>
+                                <p class="card-text">{{ appart.description }}</p>
+                                <div class="d-flex justify-content-between">
+                                    <p class="card-text"><small class="text-muted">{{ appart.beds }} bed(s)</small></p>
+                                    <p class="card-text"><small class="text-muted">{{ appart.bath }} bath(es)</small></p>
+                                    <p class="card-text"><small class="text-muted">{{ appart.space }} m2</small></p>
+                                </div>
+                                <div class="price-per-night-div">
+                                    <p class="para-price">{{ appart.price_per_night }} DA/Nuit</p>
+
+                                </div>
+                                <a class="btn btn-primary" href="{% url 'appartDetails' appart.id %}">Book Now</a>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %} 
+        </div>
+    </div>
+    <br/><br/>
+    
+    
+
+{% endblock content %}

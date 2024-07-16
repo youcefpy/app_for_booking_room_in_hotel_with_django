@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} Details Appartement {{ appart_id.id }}{% endblock title %}
+
+
+
+{% block content %}
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content-appart">
+
+            <!-- Room Image -->
+            <div class="image mt-5">
+                <img src="{{ appart_id.image_appart.url }}" alt="Image of the House" width="500px" />
+            </div>
+
+            <!-- Room Details -->
+            <div class="room">
+
+                <!-- Div 1: Back to Home -->
+                <div class="home">
+                    <a href="{% url 'index' %}"><i class="fas fa-arrow-alt-circle-left">Home</i></a>
+                </div>
+
+                <!-- Div 2: Room Information -->
+                <div class="room-info">
+                    <h1>{{ appart_id.state }}</h1>
+                    <p> {{ appart_id.description }} </p>
+                    <p class="price-appart">Price : {{ appart_id.price_per_night }} DA/day</p>
+                </div>
+
+                {% comment %} <!-- Div 3: Room Booking Form -->
+                <form id="booking-form" action="" method="POST">
+
+                    {% csrf_token %}
+
+                    <!-- Input Div -->
+                    <div>
+                        <input type="hidden" id="id_appart" name="id_appart" value={{ appart_id.id }}>
+                    </div>
+                    <div class="input-div">
+                        <label for="id_check_in">Check In : </label>
+                        <input type="datetime-local" id="id_check_in" name="check_in">
+                    </div>
+
+                    <!-- Input Div -->
+                    <div class="input-div">
+                        <label for="id_check_out">Check Out : </label>
+                        <input type="datetime-local" id="id_check_out" name="check_out">
+                    </div>
+                    <br/><br/>
+                    <!-- Input Div -->
+                    <div class="input-div">
+                        <button type="submit">Book the Appartement</button>
+                    </div>
+
+                </form> 
+
+            </div> <!-- END Room Div --> {% endcomment %}
+
+            <div class="django-div-form">
+                <form class="django-form" method="post" action="">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success">Book the appartement</button>
+                </form> 
+
+            </div> 
+
+        </div> <!-- END Main Content Div -->
+    </div>
+
+
+{% endblock content %}
