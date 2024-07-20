@@ -1,10 +1,11 @@
 from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
-from .models import Booking, Appartment
-from .forms import AvailabilityForm
+from .models import Booking, Appartment,Contact
+from .forms import AvailabilityForm,ContactForm
 from django.views.generic import ListView,FormView,View
 from .booking_function import availability
+from django.contrib import messages
 # Create your views here.
 
 
@@ -31,6 +32,53 @@ def booking_list(request):
 
     return render(request,"booking_list.html",context)
     
+
+
+def delete_booking(request,id_booking):
+
+    if request.user.is_staff : 
+        del_booking = Booking.objects.get(id=id_booking)
+        del_booking.delete()
+
+    else : 
+        del_booking = Booking.objects.get(id=id_booking)
+        del_booking.delete()
+
+    return redirect("booking_list")
+
+
+
+def contact(request):
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            f_name = form['first_name'].value()
+            l_name = form['last_name'].value()
+            email = form['email'].value()
+            message = form['message'].value()
+            contact = Contact.objects.create(
+                first_name = f_name,
+                last_name = l_name,
+                email = email,
+                message = message,
+            )
+            contact.save()
+            messages.success(request,"Your Message was send with success")
+            return redirect("index")
+        
+        else : 
+            messages.error(request, "There was an error. Please try again.")
+    else : 
+        form = ContactForm()
+
+    context ={
+        'form' : ContactForm()
+    }
+
+    return render(request,'contact.html',context)
+
+
 
 class AppartListView(ListView):
     model = Appartment

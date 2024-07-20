@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Services{% endblock title %}
+
+
+{% block content %}
+    <div class="container">
+        <h1 class="mb-3">Contact</h1>
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}   
+            </div>
+            {% endfor %}
+
+        {% endif %}
+        <form method ="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="f_name" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="f_name" aria-describedby="first_name" name="first_name">
+                <div id="first_name" class="form-text">We'll never share your name with anyone else.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="l_name" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="l_name" aria-describedby="last_name" name="last_name">
+                <div id="l_name" class="form-text">We'll never share your name with anyone else.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="Email" class="form-label">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="Email" name="email">
+              <div id="Email" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message" rows="3" name="message"></textarea>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+
+    </div>
+
+
+{% endblock content %}

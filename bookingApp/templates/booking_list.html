@@ -1,16 +1,61 @@
-{% extends "base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking List</title>
+    <script src="https://kit.fontawesome.com/692189991f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/booking_list_view.css' %}">
+</head>
 
-{% block title %}Booking_list{% endblock title %}
+<body>
+    <div class="content">
+        <div class="header">
+            <div class="headings">
+                <h1>Your Bookings</h1>
+                <h2>Welcome dear {{user}}</h2>
+            </div>
+            <div class="home">
+                <!-- Div 1: Back to Home -->
+                <div class="home">
+                    <a href="{% url 'index' %}"><i class="fas fa-arrow-alt-circle-left">Home</i></a>
+                </div>
+            </div>
 
+        </div>
 
-{% block content %}
+        <div class="bookings">
+            {% for booking in booking_list %}
+            <div class="booking">
+                <img src="{{ booking.appart.image_appart.url }}" alt="Image appartement">
+                <div class="category">
+                    <h2>{{booking.appart.state}}</h2>
+                </div>
+                <div class="from">
+                    <h3>From: {{booking.date_enter}}</h3>
+                </div>
+                <div class="to">
+                    <h3>To: {{booking.date_out}}</h3>
+                </div>
+                <div class="beds">
+                    <h3>Beds: {{booking.appart.beds}}</h3>
+                </div>
+                <div class="capacity">
+                    <h3>Total: {{booking.total}} DA</h3>
+                </div>
+                <div class="cancel">
+                    <a href="{% url 'delete_booking' booking.id %}" class="invisible" onclick="return confirm('Are you sure you want to delete this booking')" >
+                        <i class="far fa-2x fa-times-circle"> 
+                            Cancel Booking
+                        </i>
+                    </a>
+                </div>
 
-{% for booking in booking_list %}
+            </div>
+            {% endfor %}
+        </div>
+</body>
 
-    <p>{{ booking }}</p>
-
-{% endfor %}
-
-{% endblock content %}
+</html>

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% load static %}
 
 {% block title %} Details Appartement {{ appart_id.id }}{% endblock title %}
@@ -12,7 +11,7 @@
         <div class="content-appart">
 
             <!-- Room Image -->
-            <div class="image mt-5">
+            <div class="image">
                 <img src="{{ appart_id.image_appart.url }}" alt="Image of the House" width="500px" />
             </div>
 
@@ -60,15 +59,13 @@
 
             </div> <!-- END Room Div --> {% endcomment %}
 
-            <div class="django-div-form">
-                <form class="django-form" method="post" action="">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-success">Book the appartement</button>
-                </form> 
-
-            </div> 
-
+            <form role="form" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Book now</button>
+                </div>
+            </form> 
         </div> <!-- END Main Content Div -->
     </div>
 
