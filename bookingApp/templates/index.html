@@ -15,6 +15,8 @@
                 <th>Address</th>
                 <th>State</th>
                 <th>Bath</th>
+                <th>Price per night</th>
+                <th>Is available</th>
             </tr>
         </thead>
         {% for appart in appartement  %}
@@ -26,38 +28,49 @@
                     <td>{{ appart.address }}</td>
                     <td>{{ appart.state }}</td>
                     <td>{{ appart.bath }}</td>
+                    <td>{{ appart.price_per_night }} DA</td>
+                    <td>{{ appart.is_available }}</td>
                 </tr>
             </tbody> 
         {% endfor %}
     </table>  
     <br/>
     <br/>
-    
+    <div class="container-search">
+        <form method="post" action="{% url 'search_appart' %}" class="form">
+            {% csrf_token %}
+            <input type='text' name="state" placeholder='Chose your state where you want to book' />
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <br/></br>
     <div class="container">
         <div class="row row-cols-1 row-cols-md-3 g-4 appart-card-index"> 
-            {% for appart in appartement  %}        
-                <div class="col">
-                    <a href="{% url 'appartDetails' appart.id %}" class="card-appart">
-                        <div class="card">
-                            <img src="{{ appart.image_appart.url }}" height="300px" class="card-img-top img-apprat-index"  alt="Image Appartement">
-                            <hr/>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ appart.state }}</h5>
-                                <p class="card-text">{{ appart.description }}</p>
-                                <div class="d-flex justify-content-between">
-                                    <p class="card-text"><small class="text-muted">{{ appart.beds }} bed(s)</small></p>
-                                    <p class="card-text"><small class="text-muted">{{ appart.bath }} bath(es)</small></p>
-                                    <p class="card-text"><small class="text-muted">{{ appart.space }} m2</small></p>
-                                </div>
-                                <div class="price-per-night-div">
-                                    <p class="para-price">{{ appart.price_per_night }} DA/Nuit</p>
+            {% for appart in appartement  %}   
+                {% if appart.is_available %}                
+                    <div class="col">
+                        <a href="{% url 'appartDetails' appart.id %}" class="card-appart">
+                            <div class="card">
+                                <img src="{{ appart.image_appart.url }}" height="300px" class="card-img-top img-apprat-index"  alt="Image Appartement">
+                                <hr/>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ appart.state }}</h5>
+                                    <p class="card-text">{{ appart.description }}</p>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="card-text"><small class="text-muted"><i class="fa fa-bed"></i> {{ appart.beds }} bed(s)</small></p>
+                                        <p class="card-text"><small class="text-muted"><i class="fa fa-bath"></i> {{ appart.bath }} bath(es)</small></p>
+                                        <p class="card-text"><small class="text-muted"><i class="fas fa-home"></i> {{ appart.space }} m2</small></p>
+                                    </div>
+                                    <div class="price-per-night-div">
+                                        <p class="para-price">Price: {{ appart.price_per_night }} DA/Nuit</p>
 
+                                    </div>
+                                    <a class="btn btn-primary" href="{% url 'appartDetails' appart.id %}">Book Now</a>
                                 </div>
-                                <a class="btn btn-primary" href="{% url 'appartDetails' appart.id %}">Book Now</a>
                             </div>
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
+                {% endif %}     
             {% endfor %} 
         </div>
     </div>

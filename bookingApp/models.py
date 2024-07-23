@@ -13,6 +13,7 @@ class Appartment(models.Model):
     description = models.TextField(max_length=10000,blank=True)
     image_appart = models.ImageField(upload_to='media')
     price_per_night = models.DecimalField(max_digits=10,decimal_places=2,null=False)
+    is_available = models.BooleanField(default=True)
     def __str__(self):
         return f'{self.state} {self.space} m2, beds : {self.beds}'
 
@@ -25,7 +26,7 @@ class Booking(models.Model):
     date_enter = models.DateTimeField(blank=True)
     date_out = models.DateTimeField(blank=True)
     total = models.DecimalField(max_digits=10,decimal_places=2)
-        
+    
     # def total(self):
     #     return self.appart.price_per_night * (self.date_out-self.date_enter)
 

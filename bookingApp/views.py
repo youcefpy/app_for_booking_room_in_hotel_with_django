@@ -6,7 +6,14 @@ from .forms import AvailabilityForm,ContactForm
 from django.views.generic import ListView,FormView,View
 from .booking_function import availability
 from django.contrib import messages
+
+from django.contrib.auth.decorators import login_required
+from allauth.account.forms import LoginForm
+from datetime import datetime
+from threading import Timer
+from django.utils import timezone
 # Create your views here.
+
 
 
 def index(request):
@@ -31,17 +38,30 @@ def booking_list(request):
     }
 
     return render(request,"booking_list.html",context)
-    
+
+
+def search_appartement_state(request):
+    state = request.POST.get('state','')
+    apparts = Appartment.objects.filter(state__icontains=state)
+    context ={
+        'serach_apparts':apparts,
+    }
+    return render(request,'search_apparts.html',context)
+
 
 
 def delete_booking(request,id_booking):
 
     if request.user.is_staff : 
         del_booking = Booking.objects.get(id=id_booking)
+        del_booking.appart.is_available = True
+        del_booking.appart.save()
         del_booking.delete()
 
     else : 
         del_booking = Booking.objects.get(id=id_booking)
+        del_booking.appart.is_available = True
+        del_booking.appart.save()
         del_booking.delete()
 
     return redirect("booking_list")
@@ -119,31 +139,53 @@ class Appartement_details_view(View):
             for appart in appart_list : 
                 if availability.booking_logic(appart, data['check_in'],data['check_out']) :
                     availabale_apprts.append(appart)
+            if self.request.user.is_authenticated : 
 
-            if len(availabale_apprts)>0 : 
-                appart = availabale_apprts[0]
-                num_days = (data['check_out'] - data['check_in']).days
-                total_const_appart = appart.price_per_night * num_days
-                print(f"number of days for booking the appartment : {num_days} ")
-                print(f"total cost for booking the appartement is : {total_const_appart} DA")
-                booking = Booking.objects.create(
-                    user = self.request.user,
-                    appart = appart,
-                    date_enter = data['check_in'],
-                    date_out = data['check_out'],
-                    total = total_const_appart
+                if len(availabale_apprts)>0 : 
+                    appart = availabale_apprts[0]
+                    num_days = (data['check_out'] - data['check_in']).days
+                    total_const_appart = appart.price_per_night * num_days
+                    # print(f"number of days for booking the appartment : {num_days} ")
+                    # print(f"total cost for booking the appartement is : {total_const_appart} DA")
 
-                )
-                booking.save()
-                return HttpResponse(f"Booking confirmed: {booking}")
+                    booking = Booking.objects.create(
+                        user = self.request.user,
+                        appart = appart,
+                        date_enter = data['check_in'],
+                        date_out = data['check_out'],
+                        total = total_const_appart,   
+                    )
+
+                    booking.save()
+                    #after booking let's make availability to false
+                    appart.is_available = False
+                    appart.save()
+                    #reset the availability to true after the delay of booking 
+                    now = timezone.now()
+                    check_out = data['check_out']
+                    if check_out.tzinfo is None:
+                        check_out = timezone.make_aware(check_out, timezone.get_current_timezone())
+                    time_is_sec = (check_out - now).total_seconds()       
+                    Timer(time_is_sec,self.reset_availability,[appart.id]).start()
+
+                    return HttpResponse(f"Booking confirmed: {booking}")
+                else : 
+                    return HttpResponse(f"this appartement is not available from {data['check_in']} to {data["check_out"]} ")
             else : 
-                return HttpResponse("There is no available appartement ! ")
+                messages.warning(request,'You should login before book, Please login and after you book :)')
+                return redirect('account_login')
         else : 
             context={
                 'appart_id':appartement,
                 'form':form,
             }
             return render(request,"appart_details.html",context)
+        
+
+    def reset_availability(self, appart_id):
+        appart = Appartment.objects.get(id=appart_id)
+        appart.is_available = True
+        appart.save()
 
 class Booking_view(FormView):
 
