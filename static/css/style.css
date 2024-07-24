@@ -147,7 +147,7 @@ nav ul li a:hover {
 .container-search{
   width: 100%;
   height: 30vh;
-  background: #060606;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
