@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="Boutiche Youcef" content="colorlib.com">
+    <title>booking {{ user }} {{ booking.id }}</title>
+
+    <style>
+        .div-header{
+            display:flex;
+            flex-direction:row;
+        }
+    </style>
+
+</head>
+<body sytle="font-size:1.5rem">
+
+    <header>
+        <table style="width: 100%; font-size: 2rem; color: #256eff;">
+            <tr >
+                <td style="width: 20%;">
+                    <img src="{{ static_url }}images/logo_size512.png" alt="logo" width = "150px"/>
+                </td>
+                <td style="width: 80%;">
+                    <h1 style="margin: 0;">Hotel Booking tutorial</h1>
+                </td>
+            </tr>
+
+        </table>
+        {% comment %} <div class="div-header" style="font-size:2rem;color:#256eff; display:flex; flex-direction:row;">
+            <p><img src="{{ static_url }}images/logo_size512.png" alt="logo" width = "200px"/></p>
+            <h1>Hotel Booking tutorial</h1>
+        </div> {% endcomment %}
+    </header>
+    <hr/>
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+        <div class="text-thinking" style="font-size:1.3rem;">
+            <p>Thank you for choosing to stay with us at our esteemed hotel. We are delighted to confirm your booking and look forward to providing you with an exceptional experience. Please find below the details of your booking:</p>
+        </div>
+        
+            <div class="card-header text-center" style="font-size:1.3rem">
+                <h3>Booking Apartment from {{ user }}</h3>
+                <h3> <strong>Booking ID :</strong> {{ booking.id }} </h3>
+            </div>
+            <div style="font-size:1.3rem">
+                <p><strong>Apartment ID:</strong> {{ booking.appart.id }}</p>
+                <p><strong>Date In:</strong>  {{ booking.date_enter }}</p>
+                <p><strong>Date Out:</strong> {{ booking.date_out }}</p>
+                <p><strong>Price per day:</strong> {{ booking.appart.price_per_day }} DA/Night </p>
+                <p><strong>Total Amount of Stay:</strong> {{ booking.total }} DA</p>
+            </div>
+    
+            <p style="font-size:1.5rem">We strive to offer you the highest level of comfort and hospitality during your stay. Should you have any special requests or require additional assistance, please do not hesitate to reach out to our dedicated staff.
+                To ensure a smooth check-in process, kindly present this document upon arrival at the hotel. This will help us expedite your check-in and provide you with seamless service. 
+                We hope you have a pleasant journey, and we eagerly await your arrival.</p>
+    
+            <p class="text-danger" style ="color:red;text-align:center; font-size:1.5rem;"><span style="font-style:italic;">Importenet:</span> You shoud come with this pdf the day when you will come to the appartement<p>
+            <div style="font-size:1.5rem">
+                <p>Warm regards,</p>
+                <p>My Booking Hotel Tutorial</p>
+                <p>Customer Service Team</p>
+            </div>   
+    </div>
+</body>
+</html>

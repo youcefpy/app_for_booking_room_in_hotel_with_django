@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index,Booking_view,Appartement_details_view,booking_list,delete_booking,contact,search_appartement_state
+from .views import index,Booking_view,Appartement_details_view,booking_list,delete_booking,contact,search_appartement_state,gen_pdf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
@@ -14,6 +14,7 @@ urlpatterns = [
     path("about/",TemplateView.as_view(template_name='about.html'),name='about'),
     path('conatct/',contact,name="contact"),
     path('search_appart/', search_appartement_state, name='search_appart'),
+    path('gen_pdf/<int:booking_id>/',gen_pdf,name="gen_pdf"),
 ]
 
 urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

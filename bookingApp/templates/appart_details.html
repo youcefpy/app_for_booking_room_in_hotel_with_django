@@ -1,73 +1,109 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load widget_tweaks %}
 {% block title %} Details Appartement {{ appart_id.id }}{% endblock title %}
 
 
 
 {% block content %}
-    <!-- Main Content -->
-    <div class="container">
-        <div class="content-appart">
 
-            <!-- Room Image -->
-            <div class="image">
-                <img src="{{ appart_id.image_appart.url }}" alt="Image of the House" width="500px" />
+    <div class="card-wrapper-appart container">
+        <div class="card card-appart-details">
+            <!-- card left -->
+            <div class="appart-imgs">
+                <div class="img-display">
+                    
+                    <div class="img-showcase">
+                        {% for img in appart_id.appartimages_set.all %}
+                            <img src="{{ img.image.url }}" alt="image">
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="img-select">
+
+                    {% for img in appart_id.appartimages_set.all %} 
+                        <div class="img-item">
+                            <a href="#" data-id="{{ forloop.counter }}">
+                                <img src="{{ img.image.url }}" alt="image">
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-
-            <!-- Room Details -->
-            <div class="room">
-
-                <!-- Div 1: Back to Home -->
-                <div class="home">
-                    <a href="{% url 'index' %}"><i class="fas fa-arrow-alt-circle-left">Home</i></a>
+            <div class="vl"></div>
+            <!-- card right -->
+            <div class="appart-content">
+                <h2 class="appart-title">{{appart_id.state}}</h2>
+                <div class="appart-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <span>4.7(21)</span>
                 </div>
 
-                <!-- Div 2: Room Information -->
-                <div class="room-info">
-                    <h1>{{ appart_id.state }}</h1>
-                    <p> {{ appart_id.description }} </p>
-                    <p class="price-appart">Price : {{ appart_id.price_per_night }} DA/day</p>
+                <div class="appart-detail">
+                    <h2>About this Appartement:</h2>
+                    <p>{{ appart_id.description }}</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo eveniet veniam tempora fuga tenetur placeat sapiente architecto illum soluta consequuntur, aspernatur quidem at sequi ipsa!</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, perferendis eius. Dignissimos, labore suscipit. Unde.</p>
                 </div>
-
-                {% comment %} <!-- Div 3: Room Booking Form -->
-                <form id="booking-form" action="" method="POST">
-
+                <div class="mb-3">
+                    <p class="card-text"><small class="text-muted"><i class="fa fa-bed"></i> {{ appart_id.beds }} bed(s)</small></p>
+                    <p class="card-text"><small class="text-muted"><i class="fa fa-bath"></i> {{ appart_id.bath }} bath(es)</small></p>
+                    <p class="card-text"><small class="text-muted"><i class="fas fa-home"></i> {{ appart_id.space }} m2</small></p>
+                </div>
+                <div class="appart-price">
+                    <p class="new-price">Price: <span>{{ appart_id.price_per_night }} DA/Night</span></p>
+                </div>
+                <form role="form" method="POST" class="form-booking-details-page">
                     {% csrf_token %}
-
-                    <!-- Input Div -->
-                    <div>
-                        <input type="hidden" id="id_appart" name="id_appart" value={{ appart_id.id }}>
+                    <div class="label-field-form">
+                        {% for field in form  %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:"form-control" }}
+                                <div class="invalid-feedback">
+                                    {{ field.error|striptags }}
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
-                    <div class="input-div">
-                        <label for="id_check_in">Check In : </label>
-                        <input type="datetime-local" id="id_check_in" name="check_in">
+                    {% comment %} {{ form.as_p }} {% endcomment %}
+
+                    <br/>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            Book now 
+                        </button>
                     </div>
-
-                    <!-- Input Div -->
-                    <div class="input-div">
-                        <label for="id_check_out">Check Out : </label>
-                        <input type="datetime-local" id="id_check_out" name="check_out">
-                    </div>
-                    <br/><br/>
-                    <!-- Input Div -->
-                    <div class="input-div">
-                        <button type="submit">Book the Appartement</button>
-                    </div>
-
-                </form> 
-
-            </div> <!-- END Room Div --> {% endcomment %}
-
-            <form role="form" method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Book now</button>
-                </div>
-            </form> 
-        </div> <!-- END Main Content Div -->
+                </form>
+            </div>
+        </div>
     </div>
-
+    
+    <script>
+        const imgs = document.querySelectorAll('.img-select a');
+        const imgBtns = [...imgs];
+        
+        let imgId = 1;
+    
+        imgBtns.forEach((imgItem) => {
+            imgItem.addEventListener('click', (event) => {
+                event.preventDefault();
+                imgId = imgItem.dataset.id;
+                slideImage();
+            });
+        });
+    
+        function slideImage(){
+            const displayWidth = document.querySelector('.img-showcase img:first-child').clientWidth;
+            document.querySelector('.img-showcase').style.transform = `translateX(${- (imgId - 1) * displayWidth}px)`;
+        }
+    
+        window.addEventListener('resize', slideImage);
+    </script>
+    
 
 {% endblock content %}

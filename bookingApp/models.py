@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 import datetime
 # Create your models here.
 
-
 class Appartment(models.Model):
     space = models.DecimalField(max_digits=10,decimal_places=2)
     beds = models.IntegerField(default=1)
@@ -18,6 +17,13 @@ class Appartment(models.Model):
         return f'{self.state} {self.space} m2, beds : {self.beds}'
 
 
+
+class AppartImages(models.Model):
+    appartement = models.ForeignKey(Appartment,on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='media')
+
+    def __str__(self):
+        return f'image for the appartement with id : {self.appartement.id} and  {self.appartement.state}'
 
 class Booking(models.Model):
 

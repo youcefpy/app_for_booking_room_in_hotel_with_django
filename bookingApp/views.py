@@ -1,5 +1,6 @@
-from typing import Any
-from django.db.models.query import QuerySet
+
+import os
+from django.conf import settings
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
 from .models import Booking, Appartment,Contact
 from .forms import AvailabilityForm,ContactForm
@@ -7,11 +8,20 @@ from django.views.generic import ListView,FormView,View
 from .booking_function import availability
 from django.contrib import messages
 
-from django.contrib.auth.decorators import login_required
-from allauth.account.forms import LoginForm
-from datetime import datetime
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+
 from threading import Timer
 from django.utils import timezone
+from django.templatetags.static import static
+
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+
 # Create your views here.
 
 
@@ -19,6 +29,7 @@ from django.utils import timezone
 def index(request):
     appartment = Appartment.objects.all()
     context={
+
         'appartement': appartment,
     }
     return render(request,'index.html',context)
@@ -117,10 +128,13 @@ class Appartement_details_view(View):
     def get(self,request,*args,**kwargs):
         appart_id = self.kwargs.get('id',None)
         appartement =get_object_or_404(Appartment,id=appart_id)
+        
+
         form = AvailabilityForm()
         if appartement : 
 
             context={
+                
                 'appart_id':appartement,
                 'form':form,
             }
@@ -168,7 +182,7 @@ class Appartement_details_view(View):
                     time_is_sec = (check_out - now).total_seconds()       
                     Timer(time_is_sec,self.reset_availability,[appart.id]).start()
 
-                    return HttpResponse(f"Booking confirmed: {booking}")
+                    return render(request,'validation_booking.html',{'booking':booking})
                 else : 
                     return HttpResponse(f"this appartement is not available from {data['check_in']} to {data["check_out"]} ")
             else : 
@@ -186,6 +200,33 @@ class Appartement_details_view(View):
         appart = Appartment.objects.get(id=appart_id)
         appart.is_available = True
         appart.save()
+
+
+
+
+def gen_pdf(request,booking_id):
+    booking = get_object_or_404(Booking,id=booking_id)
+    user = request.user
+    template_path = 'pdf_booking.html'
+    static_url = request.build_absolute_uri(static('')).rstrip('/') + '/'
+    context = {
+        'booking': booking,
+        'user':user,
+        'static_url':static_url,
+        }
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="booking_{}.pdf"'.format(booking.id)
+
+    template = get_template(template_path)
+    html = template.render(context)
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+
 
 class Booking_view(FormView):
 

@@ -7,6 +7,9 @@ name = "pypi"
 django = "*"
 pillow = "*"
 django-bootstrap5-form = "*"
+django-widget-tweaks = "*"
+reportlab = "*"
+xhtml2pdf = "*"
 
 [dev-packages]
 

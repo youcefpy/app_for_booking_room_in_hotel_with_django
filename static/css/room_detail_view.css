@@ -1,19 +1,10 @@
-.card-appart{
+.card-appart-ind{
     color: black;
     text-decoration: none;
+
 }
-.card-appart:hover{
+
+.card-appart-ind:hover{
     color: black;
 }
 
-.content-appart{
-    display: flex;
-    flex-direction: row;
-    margin-top: 2rem;
-    gap: 2rem;
-    
-}
-
-.image img{
-    border-radius: .5rem;
-}

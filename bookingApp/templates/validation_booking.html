@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Validate booking {% endblock title %}
+
+
+{% block content %}
+
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        .btn-download {
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+        .btn-download:hover {
+            background-color: #218838;
+            color: white;
+        }
+    </style>
+
+    <div class="container d-flex justify-content-center">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>Booking Apartment from {{ user.username }}</h3>
+            </div>
+            <div class="card-body">
+                <p>Dear Valued Customer,</p>
+                <p>Thank you for choosing our platform to book your apartment. We are delighted to assist you in finding the perfect place to stay.</p>
+                <h5>Details of Booking</h5>
+                <p><strong>Apartment ID:</strong> {{ booking.appart.id }}</p>
+                <p><strong>Date In:</strong>  {{ booking.date_enter }}</p>
+                <p><strong>Date Out:</strong> {{ booking.date_out }}</p>
+                <p><strong>Total Amount of Stay:</strong> {{ booking.total }} DA</p>
+                <p class="text-danger"><strong>Important:</strong> To complete your booking and get all the necessary information, please <strong>download the PDF</strong> by clicking the link below. This PDF contains all the terms and conditions, cancellation policies, and additional details you need to know.</p>
+                <div class="text-center">
+                    <a href="{% url 'gen_pdf' booking.id %}" class="btn btn-download btn-lg">Click here to download the PDF</a>
+                </div>
+                <div class="booking-list">
+                    <a class="" href="{% url 'booking_list' %}">Check your booking list</a>
+                </div>
+                <p class="mt-4">We look forward to providing you with an excellent booking experience. If you have any questions, please do not hesitate to contact our support team.</p>
+                <p>Best regards,</p>
+                <p>Vacconci</p>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

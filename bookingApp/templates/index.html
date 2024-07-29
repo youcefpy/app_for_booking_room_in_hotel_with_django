@@ -49,20 +49,19 @@
             {% for appart in appartement  %}   
                 {% if appart.is_available %}                
                     <div class="col">
-                        <a href="{% url 'appartDetails' appart.id %}" class="card-appart">
+                        <a href="{% url 'appartDetails' appart.id %}" class="card-appart-ind">
                             <div class="card">
                                 <img src="{{ appart.image_appart.url }}" height="300px" class="card-img-top img-apprat-index"  alt="Image Appartement">
                                 <hr/>
                                 <div class="card-body">
                                     <h5 class="card-title">{{ appart.state }}</h5>
-                                    <p class="card-text">{{ appart.description }}</p>
                                     <div class="d-flex justify-content-between">
                                         <p class="card-text"><small class="text-muted"><i class="fa fa-bed"></i> {{ appart.beds }} bed(s)</small></p>
                                         <p class="card-text"><small class="text-muted"><i class="fa fa-bath"></i> {{ appart.bath }} bath(es)</small></p>
                                         <p class="card-text"><small class="text-muted"><i class="fas fa-home"></i> {{ appart.space }} m2</small></p>
                                     </div>
                                     <div class="price-per-night-div">
-                                        <p class="para-price">Price: {{ appart.price_per_night }} DA/Nuit</p>
+                                        <p class="para-price">Price: {{ appart.price_per_night }} DA/Night</p>
 
                                     </div>
                                     <a class="btn btn-primary" href="{% url 'appartDetails' appart.id %}">Book Now</a>
@@ -70,12 +69,10 @@
                             </div>
                         </a>
                     </div>
-                {% endif %}     
+                {% endif %}  
+
             {% endfor %} 
         </div>
     </div>
     <br/><br/>
-    
-    
-
 {% endblock content %}

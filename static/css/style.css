@@ -26,16 +26,13 @@ nav .logo {
   align-items: center;
 }
 nav .logo img {
-  height: 25px;
+  height: 50px;
   width: auto;
   margin-right: 10px;
 }
 nav .logo h1 {
   font-size: 1.1rem;
-  background: linear-gradient(to right, #b927fc 0%, #2c64fc 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #2c64fc;
 }
 
 nav ul {
@@ -172,7 +169,7 @@ nav ul li a:hover {
 }
 
 .container-search form button{
-  background: tomato;
+  background: #0d6efd;
   outline: none;
   color: #fff;
   letter-spacing: 1px;
@@ -180,4 +177,33 @@ nav ul li a:hover {
   border: none;
   width: 20%;
   border-radius: 10px;
+}
+
+.img-slide img {
+  height: 100px;
+}
+
+
+
+
+.img-apprat-index{
+  padding: 0.3rem;
+}
+
+.card-appart-ind{
+  color: #000;
+  text-decoration: none;
+}
+
+.card-appart-ind:hover{
+  color: #000;
+}
+
+.form-booking-details-page{
+  width: 50%;
+}
+
+.label-field-form {
+  display: flex;
+  gap: 2rem;
 }
