@@ -10,6 +10,7 @@ django-bootstrap5-form = "*"
 django-widget-tweaks = "*"
 reportlab = "*"
 xhtml2pdf = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
