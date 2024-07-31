@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f69c6d3f504443aaa5967b9f6fe1079b887ae303be9c22028d4aed25be47a087"
+            "sha256": "90331123e3eb6a52463db245e253c941275ca23f0e81d6df27b3f6bb5b336a28"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -280,6 +280,15 @@
             ],
             "index": "pypi",
             "version": "==5.0.1"
+        },
+        "django-paypal": {
+            "hashes": [
+                "sha256:27d574627035d52e95f0f40f23ad7c2e4289b7c57e959e1fa9ffb9956fab4e44",
+                "sha256:3bf83e99f3370e015f12747a688baa2a2c072318a3d3410aa0203d03e1eb28a3"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==2.1"
         },
         "django-widget-tweaks": {
             "hashes": [

@@ -11,6 +11,7 @@ django-widget-tweaks = "*"
 reportlab = "*"
 xhtml2pdf = "*"
 psycopg2 = "*"
+django-paypal = "*"
 
 [dev-packages]
 

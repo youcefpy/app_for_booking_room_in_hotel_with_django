@@ -1,9 +1,11 @@
 
 import os
+from uuid import uuid4 
 from django.conf import settings
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
 from .models import Booking, Appartment,Contact
-from .forms import AvailabilityForm,ContactForm
+from .forms import AvailabilityForm,ContactForm,PaymentMethodForm
+from django.urls import reverse
 from django.views.generic import ListView,FormView,View
 from .booking_function import availability
 from django.contrib import messages
@@ -21,6 +23,7 @@ from django.templatetags.static import static
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
+from paypal.standard.forms import PayPalPaymentsForm
 
 # Create your views here.
 
@@ -147,55 +150,128 @@ class Appartement_details_view(View):
         appart_list = Appartment.objects.filter(id=appart_id)
         availabale_apprts = []
         form = AvailabilityForm(request.POST)
+        payment_method_form = PaymentMethodForm(request.POST)
+        
+
         appartement =get_object_or_404(Appartment,id=appart_id)
-        if form.is_valid():
-            data = form.cleaned_data
-            for appart in appart_list : 
-                if availability.booking_logic(appart, data['check_in'],data['check_out']) :
-                    availabale_apprts.append(appart)
-            if self.request.user.is_authenticated : 
+        if form.is_valid() and payment_method_form.is_valid():
+            payment_method_chose = payment_method_form.cleaned_data['payment_method']
 
-                if len(availabale_apprts)>0 : 
-                    appart = availabale_apprts[0]
-                    num_days = (data['check_out'] - data['check_in']).days
-                    total_const_appart = appart.price_per_night * num_days
-                    # print(f"number of days for booking the appartment : {num_days} ")
-                    # print(f"total cost for booking the appartement is : {total_const_appart} DA")
+            if payment_method_chose == 'pay_on_hotel':
+                payment_method_chose = payment_method_form.cleaned_data['payment_method']
+                print(f" the payment chose is : {payment_method_chose}")
+                data = form.cleaned_data
+                for appart in appart_list : 
+                    if availability.booking_logic(appart, data['check_in'],data['check_out']) :
+                        availabale_apprts.append(appart)
+                if self.request.user.is_authenticated : 
+                    if len(availabale_apprts)>0 : 
+                        appart = availabale_apprts[0]
+                        num_days = (data['check_out'] - data['check_in']).days
+                        total_const_appart = appart.price_per_night * num_days
+                        # print(f"number of days for booking the appartment : {num_days} ")
+                        # print(f"total cost for booking the appartement is : {total_const_appart} DA")
 
-                    booking = Booking.objects.create(
-                        user = self.request.user,
-                        appart = appart,
-                        date_enter = data['check_in'],
-                        date_out = data['check_out'],
-                        total = total_const_appart,   
-                    )
+                        booking = Booking.objects.create(
+                            user = self.request.user,
+                            appart = appart,
+                            date_enter = data['check_in'],
+                            date_out = data['check_out'],
+                            total = total_const_appart,   
+                        )
 
-                    booking.save()
-                    #after booking let's make availability to false
-                    appart.is_available = False
-                    appart.save()
-                    #reset the availability to true after the delay of booking 
-                    now = timezone.now()
-                    check_out = data['check_out']
-                    if check_out.tzinfo is None:
-                        check_out = timezone.make_aware(check_out, timezone.get_current_timezone())
-                    time_is_sec = (check_out - now).total_seconds()       
-                    Timer(time_is_sec,self.reset_availability,[appart.id]).start()
+                        booking.save()
+                        #after booking let's make availability to false
+                        appart.is_available = False
+                        appart.save()
+                        #reset the availability to true after the delay of booking 
+                        now = timezone.now()
+                        check_out = data['check_out']
+                        if check_out.tzinfo is None:
+                            check_out = timezone.make_aware(check_out, timezone.get_current_timezone())
+                        time_is_sec = (check_out - now).total_seconds()       
+                        Timer(time_is_sec,self.reset_availability,[appart.id]).start()
 
-                    return render(request,'validation_booking.html',{'booking':booking})
+                        return render(request,'validation_booking.html',{'booking':booking})
+                    else : 
+                        return HttpResponse(f"this appartement is not available from {data['check_in']} to {data["check_out"]} ")
+                
                 else : 
-                    return HttpResponse(f"this appartement is not available from {data['check_in']} to {data["check_out"]} ")
+                    messages.warning(request,'You should login before book, Please login and after you book :)')
+                    return redirect('account_login')
             else : 
-                messages.warning(request,'You should login before book, Please login and after you book :)')
-                return redirect('account_login')
+
+                payment_method_chose = payment_method_form.cleaned_data['payment_method']
+                print(f" the payment chose is : {payment_method_chose}")
+                data = form.cleaned_data
+                for appart in appart_list : 
+                    if availability.booking_logic(appart, data['check_in'],data['check_out']) :
+                        availabale_apprts.append(appart)
+                if self.request.user.is_authenticated : 
+                    if len(availabale_apprts)>0 : 
+                        appart = availabale_apprts[0]
+                        num_days = (data['check_out'] - data['check_in']).days
+                        total_const_appart = appart.price_per_night * num_days
+                        # print(f"number of days for booking the appartment : {num_days} ")
+                        # print(f"total cost for booking the appartement is : {total_const_appart} DA")
+
+                        booking = Booking.objects.create(
+                            user = self.request.user,
+                            appart = appart,
+                            date_enter = data['check_in'],
+                            date_out = data['check_out'],
+                            total = total_const_appart,   
+                        )           
+                        total_amount_for_booking = booking.total/220
+                        total_amount_for_booking_in_usd = str(total_amount_for_booking)
+
+                        host = request.get_host()
+                        paypal_dict = {
+                            "business": settings.PAYPAL_RECEIVER_EMAIL,
+                            "amount": total_amount_for_booking_in_usd,
+                            "item_name": f"appart_state : {booking.appart.state}, appart_id : {booking.appart.id}",
+                            "invoice": str(uuid4()),
+                            'currency_code': 'USD',
+                            "notify_url":  f'http://{host}{reverse('paypal-ipn')}',
+                            "return": f'https://{host}{reverse('payment_success')}',
+                            "cancel_return": f'https://{host}{(reverse('index'))}',
+                                    
+                        }
+
+                        # Create the instance.
+                        form = PayPalPaymentsForm(initial=paypal_dict)
+                        context = {
+                            "form_paypal": form,
+                            "booking":booking,
+                            # "payment_method_chose":payment_method_chose,
+                                    
+                            }
+                        
+                        booking.save()
+                        #after booking let's make availability to false
+                        appart.is_available = False
+                        appart.save()
+                        #reset the availability to true after the delay of booking 
+                        now = timezone.now()
+                        check_out = data['check_out']
+                        if check_out.tzinfo is None:
+                            check_out = timezone.make_aware(check_out, timezone.get_current_timezone())
+                        time_is_sec = (check_out - now).total_seconds()       
+                        Timer(time_is_sec,self.reset_availability,[appart.id]).start()    
+                        return render(request, "paypal-payment.html", context)
+                    else :
+                        return HttpResponse(f"this appartement is not available from {data['check_in']} to {data["check_out"]} ")
+                else :
+                    messages.warning(request,'You should login before book, Please login and after you book :)')
+                    return redirect('account_login')
         else : 
             context={
                 'appart_id':appartement,
                 'form':form,
+                'payment_method_form':payment_method_form,
             }
             return render(request,"appart_details.html",context)
         
-
     def reset_availability(self, appart_id):
         appart = Appartment.objects.get(id=appart_id)
         appart.is_available = True
@@ -226,6 +302,42 @@ def gen_pdf(request,booking_id):
        return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
 
+
+
+
+
+
+def view_that_asks_for_money(request,booking_id):
+    booking = get_object_or_404(Booking,id=booking_id)
+    total_amount_for_booking = booking.total/220
+    total_amount_for_booking_in_usd = str(total_amount_for_booking)
+
+    host = request.get_host()
+    paypal_dict = {
+        "business": settings.PAYPAL_RECEIVER_EMAIL,
+        "amount": total_amount_for_booking_in_usd,
+        "item_name": f"appart_state : {booking.appart.state}, appart_id : {booking.appart.id}",
+        "invoice": str(uuid4()),
+        'currency_code': 'USD',
+        "notify_url":  f'http://{host}{reverse('paypal-ipn')}',
+        "return": f'https://{host}{reverse('payment_success')}',
+        "cancel_return": f'https://{host}{(reverse('index'))}',
+        "custom": "premium_plan",  
+    }
+
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    context = {
+        "form_paypal": form,
+        "booking":booking,
+        
+        }
+    return render(request, "payment.html", context)
+
+
+def success_payment(request):
+
+    return render(request,'success_payment.html',{})
 
 
 class Booking_view(FormView):

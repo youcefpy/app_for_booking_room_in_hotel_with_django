@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Paypal-payment{% endblock title %}
+
+
+{% block content %}
+
+    <h1>Payment</h1>
+
+    {% if messages %}
+    {% for message in messages  %}
+        <ul>
+            <li>
+                {{ message }}
+            </li>
+        </ul>
+    {% endfor %}
+    {% endif %}
+
+    {{ form_paypal.render }}
+
+
+{% endblock content %}
+
+

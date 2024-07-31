@@ -7,4 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls'),name="accounts"),
     path('',include('bookingApp.urls')),
+    path('paypal/', include("paypal.standard.ipn.urls")),
 ]

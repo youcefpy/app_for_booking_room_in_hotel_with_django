@@ -48,6 +48,10 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
+    #payment
+
+    'paypal.standard.ipn',
+
 ]
 
 MIDDLEWARE = [
@@ -163,3 +167,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_LOGOUT_REDIRECT_URL ='index'
 
 LOGIN_REDIRECT_URL = 'index'
+
+
+#test payment 
+
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = 'sb-131l331298786@business.example.com'
