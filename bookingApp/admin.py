@@ -1,11 +1,16 @@
 from django.contrib import admin
-from .models import Appartment,AppartImages, Booking,Contact
+from .models import Room,RoomImages, Booking,Contact,CommentRoom,Category
 # Register your models here.
 
 
 
-admin.site.register(Contact)
-admin.site.register(Appartment)
-admin.site.register(AppartImages)
-admin.site.register(Booking)
+class RoomAdmin(admin.ModelAdmin):
+    model = Room
+    list_display = ['category_room','space','beds','bath','description','price_per_night','is_available']
 
+admin.site.register(Category)
+admin.site.register(Contact)
+admin.site.register(Room,RoomAdmin)
+admin.site.register(RoomImages)
+admin.site.register(Booking)
+admin.site.register(CommentRoom)

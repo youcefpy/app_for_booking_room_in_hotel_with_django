@@ -1,5 +1,8 @@
 from django import forms
-from .models import Appartment
+from django.conf import settings
+from .models import CommentRoom
+from django.utils.html import format_html
+from paypal.standard.forms import PayPalPaymentsForm
 
 class AvailabilityForm(forms.Form):
 
@@ -17,3 +20,42 @@ class ContactForm(forms.Form):
     last_name= forms.CharField(max_length=255)
     email = forms.EmailField(max_length=255)
     message = forms.CharField(widget=forms.Textarea)
+
+
+
+class CustomPayPalPaymentsForm(PayPalPaymentsForm):
+    def get_image(self):
+        return ''  # Return an empty string since we're not using an image
+    
+
+    def get_endpoint(self):
+        if settings.PAYPAL_TEST:
+            return "https://www.sandbox.paypal.com/cgi-bin/webscr"
+        return "https://www.paypal.com/cgi-bin/webscr"
+    
+
+    def render(self):
+        return format_html(
+            u"""<form action="{0}" method="post">
+                    {1}
+                    <button type="submit" class="btn-pay">Pay the booking</button>
+                </form>""",
+            self.get_endpoint(),
+            self.as_p()
+        )
+
+
+class CommentRoomForm(forms.ModelForm):
+    class Meta : 
+        model = CommentRoom
+        fields = ['comment']
+        widgets={
+            'comment':forms.Textarea(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Leave a comment',
+                    'id':'commentTextArea'
+                    }
+                    )
+            
+        }

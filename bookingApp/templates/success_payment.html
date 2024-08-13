@@ -1,12 +1,78 @@
 {% extends "base.html" %}
+
 {% load static %}
 
-{% block title %}Paypal-payment{% endblock title %}
-
+{% block title %}Validate Booking{% endblock title %}
 
 {% block content %}
 
-<h1>your payment has been successfully completed</h1>
+    <style>
+        .container {
+            margin-top: 60px;
+        }
+        .card {
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+        .card-header {
+            background-color: #343a40;
+            color: #fff;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .card-body {
+            padding: 35px;
+        }
+        .btn-download {
+            background-color: #ffc107;
+            color: #343a40;
+            border-radius: 25px;
+            padding: 12px 25px;
+            font-size: 16px;
+        }
+        .btn-download:hover {
+            background-color: #e0a800;
+            color: #343a40;
+        }
+        .booking-list {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .booking-list a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .booking-list a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <div class="container d-flex justify-content-center">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>Booking Apartment from {{ user.username }}</h3>
+            </div>
+            <div class="card-body">
+                <p>Dear Valued Customer,</p>
+                <p>Thank you for choosing our platform to book your apartment. We are delighted to assist you in finding the perfect place to stay.</p>
+                <h5>Details of Booking</h5>
+                <p><strong>Room ID:</strong> {{ booking.room.id }}</p>
+                <p><strong>Date In:</strong> {{ booking.date_enter }}</p>
+                <p><strong>Date Out:</strong> {{ booking.date_out }}</p>
+                <p><strong>Total Amount of Stay:</strong> {{ booking.total }} DA</p>
+                <p><strong>Payment Status:</strong> Your payment has been successfully performed.</p>
+                <p class="text-danger"><strong>Important:</strong> To complete your booking and get all the necessary information, please <strong>download the PDF</strong> by clicking the link below. This PDF contains all the terms and conditions, cancellation policies, and additional details you need to know.</p>
+                <div class="text-center">
+                    <a href="{% url 'gen_pdf' booking.id %}" class="btn btn-download btn-lg">Click here to download the PDF</a>
+                </div>
+                <div class="booking-list">
+                    <a href="{% url 'booking_list' %}">Check your booking list</a>
+                </div>
+                <p class="mt-4">We look forward to providing you with an excellent booking experience. If you have any questions, please do not hesitate to contact our support team.</p>
+                <p>Best regards,</p>
+                <p>Vacconci</p>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
-
-

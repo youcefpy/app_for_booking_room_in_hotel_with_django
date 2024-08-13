@@ -29,9 +29,12 @@
         <div class="bookings">
             {% for booking in booking_list %}
             <div class="booking">
-                <img src="{{ booking.appart.image_appart.url }}" alt="Image appartement">
+                <img src="{{ booking.room.image_room.url }}" alt="Image appartement">
                 <div class="category">
-                    <h2>{{booking.appart.state}}</h2>
+                    <h2>Room ID :{{booking.room.id}}</h2>
+                </div>
+                <div class="customer-name">
+                    <strong>Costumer : {{ user.username }}</strong>
                 </div>
                 <div class="from">
                     <h3>From: {{booking.date_enter}}</h3>
@@ -44,6 +47,9 @@
                 </div>
                 <div class="capacity">
                     <h3>Total: {{booking.total}} DA</h3>
+                </div>
+                <div class="capacity">
+                    <h3>IS Paided: {{booking.is_paied}}</h3>
                 </div>
                 <div class="cancel">
                     <a href="{% url 'delete_booking' booking.id %}" class="invisible" onclick="return confirm('Are you sure you want to delete this booking')" >

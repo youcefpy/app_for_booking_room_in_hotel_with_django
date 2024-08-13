@@ -3,47 +3,16 @@
 {% block title %}Home{% endblock title %}
 
 {% block content %}
+
+
+
     <div class="container">
-        <h1>My home Page</h1>
-        <p>Welcome to my home page</p>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Space</th>
-                    <th>Beds</th>
-                    <th>Bath</th>
-                    <th>Price per night</th>
-                    <th>Is available</th>
-                </tr>
-            </thead>
-            {% for room in rooms  %}
-                <tbody>
-                    <tr>
-                        <td>{{ room.id }}</td>
-                        <td>{{ room.space }}</td>
-                        <td>{{ room.beds }}</td>
-                        <td>{{ room.bath }}</td>
-                        <td>{{ room.price_per_night }} DA</td>
-                        <td>{{ room.is_available }}</td>
-                    </tr>
-                </tbody> 
-            {% endfor %}
-        </table>  
-    </div>
-    <br/>
-    <br/>
-    <div class="container-search">
-        <form method="post" action="{% url 'search_room_category' 'category' %}" class="form">
-            {% csrf_token %}
-            <input type='text' name="category" placeholder='Search your category room' />
-            <button type="submit">Search</button>
-        </form>
-    </div>
-    <br/></br>
-    <div class="container">
+        <h1>{{ category_name }}</h1>
+        <br/>
+        <br/>
         <div class="row row-cols-1 row-cols-md-3 g-4 appart-card-index"> 
-            {% for room in rooms  %}   
+            {% for room in categories_room  %}   
+                {% if room.is_available %}                
                 {% if room.is_available %}                
                     <div class="col">
                         <a href="{% url 'roomDetails' room.id %}" class="card-appart-ind">
@@ -71,9 +40,11 @@
                         </a>
                     </div>
                 {% endif %}  
-
+                {% endif %}     
             {% endfor %} 
         </div>
     </div>
     <br/><br/>
+
+    
 {% endblock content %}

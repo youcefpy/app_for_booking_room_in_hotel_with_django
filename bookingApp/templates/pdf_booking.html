@@ -47,11 +47,19 @@
                 <h3> <strong>Booking ID :</strong> {{ booking.id }} </h3>
             </div>
             <div style="font-size:1.3rem">
-                <p><strong>Apartment ID:</strong> {{ booking.appart.id }}</p>
+                <p><strong>Room ID:</strong> {{ booking.room.id }}</p>
                 <p><strong>Date In:</strong>  {{ booking.date_enter }}</p>
                 <p><strong>Date Out:</strong> {{ booking.date_out }}</p>
-                <p><strong>Price per Night:</strong> {{ booking.appart.price_per_night }} DA/Night </p>
+                <p><strong>Price per Night:</strong> {{ booking.room.price_per_night }} DA/Night </p>
                 <p><strong>Total Amount of Stay:</strong> {{ booking.total }} DA</p>
+                <p>
+                    <strong>Is Paid:</strong> 
+                    {% if booking.is_paied %}
+                       The booking was paid 
+                    {% else %}
+                        The booking was <strong>not</strong> paid
+                    {% endif %} 
+                </p>
             </div>
     
             <p style="font-size:1.5rem">We strive to offer you the highest level of comfort and hospitality during your stay. Should you have any special requests or require additional assistance, please do not hesitate to reach out to our dedicated staff.

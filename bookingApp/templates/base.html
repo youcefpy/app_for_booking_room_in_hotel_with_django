@@ -32,14 +32,36 @@
             <a href="{% url 'index' %}">Home</a>
           </li>
           <li>
+            <ul id="nav">
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="{% url 'index' %}">All Rooms</a></li>
+                      <li><hr class="dropdown-divider" /></li>
+                      {% for category in list_category %}
+                          <li>
+                              <a class="dropdown-item" href="{% url 'search_room_category' category.name_category %}">
+                                  {{ category.name_category }}
+                              </a>
+                          </li>
+                      {% endfor %}
+                  </ul>
+              </li>
+            </ul>
+          
+          </li>
+          <li>
             <a href="{% url 'services' %}">Services</a>
           </li>
+
           <li>
             <a href="{% url 'about' %}">About</a>
           </li>
+          
           <li>
             <a href="{% url 'contact' %}">Contact Us</a>
           </li>
+
           {% if user.is_authenticated %}
 
                 <li>
@@ -85,12 +107,35 @@
           <li>
             <a href="{% url 'contact' %}">Contact Us</a>
           </li>
-          <li>
-            {% comment %} <a href="{% url 'accounts' %}">Login</a> {% endcomment %}
-            Hello {{ user }}
-          </li>
+
+              {% if user.is_authenticated %}
+
+                <li>
+                  <a href="{% url 'booking_list' %}" >Your Booking</a>
+                </li>
+                <li>
+                    <a href="{% url 'account_logout' %}" >Logout</a>
+                </li>
+                
+                <li style="font-size:1.2rem;font-weight:bold;">
+                  {% comment %} <a href="{% url 'accounts' %}">Contact Us</a> {% endcomment %}
+                  Hello {{ user }}
+              </li>
+
+              {% else %}
+
+                    <li>
+                        <a href="{% url 'account_login' %}">Login</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'account_signup' %}">Signup</a>
+                    </li>
+
+            {% endif %}
         </ul>
       </div>
+
+
         {% block content %}
         {% endblock content %}
     <script src="{% static 'js/script.js' %}"></script>

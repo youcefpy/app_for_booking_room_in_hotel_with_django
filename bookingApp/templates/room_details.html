@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load widget_tweaks %}
-{% block title %} Details Appartement {{ appart_id.id }}{% endblock title %}
+{% block title %} Details Room {{ room_id.id }}{% endblock title %}
 
 
 
@@ -14,14 +14,14 @@
                 <div class="img-display">
                     
                     <div class="img-showcase">
-                        {% for img in appart_id.appartimages_set.all %}
+                        {% for img in room_id.roomimages_set.all %}
                             <img src="{{ img.image.url }}" alt="image">
                         {% endfor %}
                     </div>
                 </div>
                 <div class="img-select">
 
-                    {% for img in appart_id.appartimages_set.all %} 
+                    {% for img in room_id.roomimages_set.all %} 
                         <div class="img-item">
                             <a href="#" data-id="{{ forloop.counter }}">
                                 <img src="{{ img.image.url }}" alt="image">
@@ -33,7 +33,7 @@
             <div class="vl"></div>
             <!-- card right -->
             <div class="appart-content">
-                <h2 class="appart-title">{{appart_id.state}}</h2>
+                <h2 class="appart-title">Room ID : {{room_id.id}}</h2>
                 <div class="appart-rating">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -44,18 +44,18 @@
                 </div>
 
                 <div class="appart-detail">
-                    <h2>About this Appartement:</h2>
-                    <p>{{ appart_id.description }}</p>
+                    <h2>About this Room:</h2>
+                    <p>{{ room_id.description }}</p>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo eveniet veniam tempora fuga tenetur placeat sapiente architecto illum soluta consequuntur, aspernatur quidem at sequi ipsa!</p>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, perferendis eius. Dignissimos, labore suscipit. Unde.</p>
                 </div>
                 <div class="mb-3">
-                    <p class="card-text"><small class="text-muted"><i class="fa fa-bed"></i> {{ appart_id.beds }} bed(s)</small></p>
-                    <p class="card-text"><small class="text-muted"><i class="fa fa-bath"></i> {{ appart_id.bath }} bath(es)</small></p>
-                    <p class="card-text"><small class="text-muted"><i class="fas fa-home"></i> {{ appart_id.space }} m2</small></p>
+                    <p class="card-text"><small class="text-muted"><i class="fa fa-bed"></i> {{ room_id.beds }} bed(s)</small></p>
+                    <p class="card-text"><small class="text-muted"><i class="fa fa-bath"></i> {{ room_id.bath }} bath(es)</small></p>
+                    <p class="card-text"><small class="text-muted"><i class="fas fa-home"></i> {{ room_id.space }} m2</small></p>
                 </div>
                 <div class="appart-price">
-                    <p class="new-price">Price: <span>{{ appart_id.price_per_night }} DA/Night</span></p>
+                    <p class="new-price">Price: <span>{{ room_id.price_per_night }} DA/Night</span></p>
                 </div>
                 <form role="form" method="POST" class="form-booking-details-page">
                     {% csrf_token %}
@@ -94,12 +94,39 @@
             </div>
         </div>
     </div>
-
-    <div class="container">
-        <h1>Comments</h1>
-
-    </div>
     
+    <div class="container" >
+        <form method="POST">  
+            {% csrf_token %}
+            {% for field_comment in formComment  %}
+                {{ field_comment }}
+            {% endfor %}
+            
+            <br/>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <br/>
+
+    <div class="comment-div container">
+        <h1>Comments</h1>
+        {% for comment in comments %}
+            <div class="comment-box border rounded p-3 mb-3">
+                <div class="comment-header d-flex justify-content-between">
+                    <h5 class="comment-user mb-1">{{ comment.user }}</h5>
+                    <small class="text-muted">{{ comment.created_on|date:"F j, Y, g:i a" }}</small>
+                </div>
+                <div class="comment-body">
+                    <p class="comment-text">{{ comment.comment }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
     <script>
         const imgs = document.querySelectorAll('.img-select a');
         const imgBtns = [...imgs];

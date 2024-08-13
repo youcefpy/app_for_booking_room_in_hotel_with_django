@@ -1,26 +1,110 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Paypal-payment{% endblock title %}
-
+{% block title %}Paypal Payment{% endblock title %}
 
 {% block content %}
+    
+    <style>
+        .payment-container {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+        }
+        .payment-card {
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+            padding: 20px;
+        }
+        .payment-header {
+            background-color: #0d6efd;
+            color: #fff;
+            padding: 15px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .payment-body {
+            padding: 15px;
+        }
+        .message-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .message-list li {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .paypal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content:center;
+        }
+        .paypal-form button {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .paypal-form button:hover {
+            background-color: #0d5efd;
+        }
 
-    <h1>Payment</h1>
 
-    {% if messages %}
-    {% for message in messages  %}
-        <ul>
-            <li>
-                {{ message }}
-            </li>
-        </ul>
-    {% endfor %}
-    {% endif %}
+        .btn-pay {
+            background-color: #ff5733; 
+            color: white; 
+            border: none; 
+            border-radius: 25px; 
+            padding: 12px 25px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            transition: background-color 0.3s ease; 
+        }
+        
+        .btn-pay:hover {
+            background-color: #e74c3c; /* Darker background on hover */
+        }
+        button.btn-pay {
+            font-size: 1.5rem;
+        }
+        .paypal-form form {
+            display:flex;
+            justify-content:center;
+        }
+    </style>
 
-    {{ form_paypal.render }}
+    <div class="payment-container">
+        <div class="payment-card">
+            <div class="payment-header">
+                <h1>Payment</h1>
+            </div>
+            <div class="payment-body">
+                {% if messages %}
+                    <ul class="message-list">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <p>Thank you for choosing our service. Please review the details of your booking and proceed with the payment.</p>
+                <p>If you have any questions or need assistance, do not hesitate to contact our support team.</p>
 
+                <div class="paypal-form">
+                    {{ form_paypal.render }}
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock content %}
-
-

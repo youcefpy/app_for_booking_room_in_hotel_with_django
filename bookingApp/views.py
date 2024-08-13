@@ -3,8 +3,8 @@ import os
 from uuid import uuid4 
 from django.conf import settings
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
-from .models import Booking, Appartment,Contact,TempBooking
-from .forms import AvailabilityForm,ContactForm,PaymentMethodForm
+from .models import Booking, Room,Contact,TempBooking,CommentRoom,Category
+from .forms import AvailabilityForm,ContactForm,PaymentMethodForm,CustomPayPalPaymentsForm,CommentRoomForm
 from django.urls import reverse
 from django.views.generic import ListView,FormView,View
 from .booking_function import availability
@@ -29,17 +29,19 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from datetime import datetime, timedelta
-from django.utils import timezone
+
 
 # Create your views here.
 
 
 
 def index(request):
-    appartment = Appartment.objects.all()
-    context={
+    room = Room.objects.all()
+    categories = Category.objects.all()
 
-        'appartement': appartment,
+    context={
+        'category':categories,
+        'rooms': room,
     }
     return render(request,'index.html',context)
 
@@ -59,14 +61,13 @@ def booking_list(request):
 
     return render(request,"booking_list.html",context)
 
-
-def search_appartement_state(request):
-    state = request.POST.get('state','')
-    apparts = Appartment.objects.filter(state__icontains=state)
-    context ={
-        'serach_apparts':apparts,
+def search_room_category(request,category):
+    cat_room = Room.objects.filter(category_room__name_category__icontains=category)
+    context={
+        'categories_room':cat_room,
+        'category_name':category,
     }
-    return render(request,'search_apparts.html',context)
+    return render(request,'search_rooms.html',context)
 
 
 
@@ -74,14 +75,14 @@ def delete_booking(request,id_booking):
 
     if request.user.is_staff : 
         del_booking = Booking.objects.get(id=id_booking)
-        del_booking.appart.is_available = True
-        del_booking.appart.save()
+        del_booking.room.is_available = True
+        del_booking.room.save()
         del_booking.delete()
 
     else : 
         del_booking = Booking.objects.get(id=id_booking)
-        del_booking.appart.is_available = True
-        del_booking.appart.save()
+        del_booking.room.is_available = True
+        del_booking.room.save()
         del_booking.delete()
 
     return redirect("booking_list")
@@ -120,8 +121,8 @@ def contact(request):
 
 
 
-class AppartListView(ListView):
-    model = Appartment
+class RoomListView(ListView):
+    model = Room
 
 
 # def appart_details(request,id:int):
@@ -132,60 +133,83 @@ class AppartListView(ListView):
 
 #     return render(request,'appart_details.html',context)
 
-class Appartement_details_view(View):
+class Room_details_view(View):
     def get(self, request, *args, **kwargs):
-        appart_id = self.kwargs.get('id', None)
-        appartement = get_object_or_404(Appartment, id=appart_id)
-        
+        room_id = self.kwargs.get('id', None)
+        room = get_object_or_404(Room, id=room_id)
+        comments = CommentRoom.objects.filter(room = room)
         form = AvailabilityForm()
-        if appartement:
+
+        formComment = CommentRoomForm()
+
+        if room:
             context = {
-                'appart_id': appartement,
+                'room_id': room,
                 'form': form,
+                'comments':comments,
+                'formComment' : formComment,
+
             }
-            return render(request, "appart_details.html", context)
+            return render(request, "room_details.html", context)
         else:
-            return HttpResponse("The appartement does not exist!")
+            return HttpResponse("The Room does not exist!")
 
     def post(self, request, *args, **kwargs):
-        appart_id = self.kwargs.get('id', None)
-        appart_list = Appartment.objects.filter(id=appart_id)
-        available_aparts = []
+        room_id = self.kwargs.get('id', None)
+        room_list = Room.objects.filter(id=room_id)
+        available_room = []
         form = AvailabilityForm(request.POST)
         payment_method_form = PaymentMethodForm(request.POST)
 
+        formComment = CommentRoomForm(request.POST)
+        room = get_object_or_404(Room, id=room_id)
+        if formComment.is_valid():
+            comment = formComment.save(commit=False)
+            comment.user = self.request.user
+            comment.room= room 
+            comment.save()
+            return redirect('roomDetails',id=room_id)
+
         if form.is_valid() and payment_method_form.is_valid():
-            appartement = get_object_or_404(Appartment, id=appart_id)
             payment_method_chose = payment_method_form.cleaned_data['payment_method']
             data = form.cleaned_data
+    
+            for room in room_list:
+                if availability.booking_logic(room, data['check_in'], data['check_out']):
+                    available_room.append(room)
 
-            for appart in appart_list:
-                if availability.booking_logic(appart, data['check_in'], data['check_out']):
-                    available_aparts.append(appart)
+            today = timezone.now()
 
-            if self.request.user.is_authenticated:
-                if len(available_aparts) > 0:
-                    appart = available_aparts[0]
+            if self.request.user.is_authenticated:  
+
+                if data['check_out'] < data['check_in']:
+                    return HttpResponse('Invalid Booking, The Date in should be less then the Date out, So please try again.')
+
+                if data['check_in'] < today or data['check_out'] < today:
+                    return HttpResponse('Invalid Booking, The Date should equal or sup to the date of today. Please try again')
+
+                if len(available_room) > 0:
+                    room = available_room[0]
                     num_days = (data['check_out'] - data['check_in']).days
-                    total_cost_appart = appart.price_per_night * num_days
+                    total_cost_room = room.price_per_night * num_days
 
                     if payment_method_chose == 'pay_on_hotel':
                         booking = Booking.objects.create(
                             user=self.request.user,
-                            appart=appart,
+                            room=room,
                             date_enter=data['check_in'],
                             date_out=data['check_out'],
-                            total=total_cost_appart,
+                            total=total_cost_room,
                         )
-                        self.complete_booking(booking, appart, data)
+                        self.complete_booking(booking, room, data)
                         return render(request, 'validation_booking.html', {'booking': booking})
                     else:
                         temp_booking = TempBooking.objects.create(
                             user=self.request.user,
-                            appart=appart,
+                            room=room,
                             date_enter=data['check_in'],
                             date_out=data['check_out'],
-                            total=total_cost_appart,
+                            total=total_cost_room,
                         )
                         total_amount_for_booking = temp_booking.total / 220
                         total_amount_for_booking_in_usd = str(total_amount_for_booking)
@@ -193,38 +217,41 @@ class Appartement_details_view(View):
                         paypal_dict = {
                             "business": settings.PAYPAL_RECEIVER_EMAIL,
                             "amount": total_amount_for_booking_in_usd,
-                            "item_name": f"appart_state : {temp_booking.appart.state}, appart_id : {temp_booking.appart.id}",
+                            "item_name": f"room_id : {temp_booking.room.id}",
                             "invoice": str(temp_booking.id),
                             'currency_code': 'USD',
                             "notify_url": f'http://{host}{reverse("paypal-ipn")}',
                             "return": f'http://{host}{reverse("payment_success", args=[temp_booking.id])}',
                             "cancel_return": f'http://{host}{reverse("index")}',
                         }
-                        form = PayPalPaymentsForm(initial=paypal_dict)
+                        form = CustomPayPalPaymentsForm(initial=paypal_dict)
                         context = {
                             "form_paypal": form,
                             "booking": temp_booking,
+                            'formComment':formComment,
                         }
                         return render(request, "paypal-payment.html", context)
                 else:
-                    return HttpResponse(f"This appartement is not available from {data['check_in']} to {data['check_out']}.")
+                    return HttpResponse(f"This room is not available from {data['check_in']} to {data['check_out']}.")
             else:
                 messages.warning(request, 'You should login before booking. Please login and then book.')
                 return redirect('account_login')
         else:
+   
             context = {
-                'appart_id': appart_id,
+                'room_id': room_id,
                 'form': form,
                 'payment_method_form': payment_method_form,
+                'formComment' : formComment,
+
             }
-            return render(request, "appart_details.html", context)
+            return render(request, "room_details.html", context)
 
-    def complete_booking(self, booking, appart, data):
+    def complete_booking(self, booking, room, data):
         booking.save()
-        appart.is_available = False
-        appart.save()
+        room.is_available = False
+        room.save()
 
-        # Convert check_out date to datetime if it is not already
         check_out = data['check_out']
         if isinstance(check_out, datetime):
             check_out_dt = check_out
@@ -234,12 +261,12 @@ class Appartement_details_view(View):
 
         now = timezone.now()
         time_is_sec = (check_out_dt - now).total_seconds()
-        Timer(time_is_sec, self.reset_availability, [appart.id]).start()
+        Timer(time_is_sec, self.reset_availability, [room.id]).start()
 
-    def reset_availability(self, appart_id):
-        appart = Appartment.objects.get(id=appart_id)
-        appart.is_available = True
-        appart.save()
+    def reset_availability(self, room_id):
+        room = Room.objects.get(id=room_id)
+        room.is_available = True
+        room.save()
 
 def gen_pdf(request,booking_id):
     booking = get_object_or_404(Booking,id=booking_id)
@@ -300,12 +327,13 @@ class PayPalPaymentView(View):
         if not temp_booking.is_paid:
             booking = Booking.objects.create(
                 user=temp_booking.user,
-                appart=temp_booking.appart,
+                room=temp_booking.room,
                 date_enter=temp_booking.date_enter,
                 date_out=temp_booking.date_out,
                 total=temp_booking.total,
+                is_paied = True
             )
-            Appartement_details_view().complete_booking(booking, temp_booking.appart, {
+            Room_details_view().complete_booking(booking, temp_booking.room, {
                 'check_in': temp_booking.date_enter,
                 'check_out': temp_booking.date_out,
             })
@@ -320,12 +348,13 @@ class PayPalPaymentView(View):
         if not temp_booking.is_paid:
             booking = Booking.objects.create(
                 user=temp_booking.user,
-                appart=temp_booking.appart,
+                room=temp_booking.room,
                 date_enter=temp_booking.date_enter,
                 date_out=temp_booking.date_out,
                 total=temp_booking.total,
+                is_paied = True
             )
-            Appartement_details_view().complete_booking(booking, temp_booking.appart, {
+            Room_details_view().complete_booking(booking, temp_booking.room, {
                 'check_in': temp_booking.date_enter,
                 'check_out': temp_booking.date_out,
             })
@@ -341,24 +370,25 @@ class Booking_view(FormView):
 
     def form_valid(self, form):
         data = form.cleaned_data
-        appart_list = Appartment.objects.all()
+        room_list = Room.objects.all()
         availabale_apprts = []
-        for appart in appart_list : 
-            if availability.booking_logic(appart, data['check_in'],data['check_out']) :
-                availabale_apprts.append(appart)
+        for room in room_list : 
+            if availability.booking_logic(room, data['check_in'],data['check_out']) :
+                availabale_apprts.append(room)
 
         if len(availabale_apprts)>0 : 
-            appart = availabale_apprts[0]
+            room = availabale_apprts[0]
             booking = Booking.objects.create(
                 user = self.request.user,
-                appart = appart,
+                room = room,
                 date_enter = data['check_in'],
                 date_out = data['check_out'],
             )
             booking.save()
             return HttpResponse(booking)
         else : 
-            return HttpResponse("There is no available appartement ! ")
+            return HttpResponse("There is no available room ! ")
+        
 
 
 

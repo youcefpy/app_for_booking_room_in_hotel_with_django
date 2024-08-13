@@ -5,7 +5,7 @@
        
 }
 .card-appart-details{
-    background-color: beige !important;
+    background-color: rgba(13, 110, 253, 0.1) !important;
 }
 .appart-imgs{
     width: 100%;
@@ -193,4 +193,30 @@
     .appart-content{
         padding-top: 0;
     }
+}
+
+
+
+.comment-div {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.comment-box {
+    background-color: #ffffff;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comment-user {
+    font-weight: bold;
+}
+
+.comment-room {
+    font-style: italic;
+}
+
+.comment-text {
+    font-size: 1.1em;
+    margin-top: 10px;
 }

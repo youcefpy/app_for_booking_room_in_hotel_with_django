@@ -5,8 +5,8 @@
 }
 body{
     font-family: sans-serif;
-    background-color: rgb(46, 47, 48);
-    color: rgb(236, 235, 228);
+    background-color: rgb(236, 235, 228);
+    color:  rgb(46, 47, 48);
     line-height: 1.5;
     font-size: 1.2rem;
     text-align: center;
@@ -45,7 +45,7 @@ body{
     max-width:20vw;
     min-width: 20rem;
     text-align: left;
-    border: 1px solid #dbdbdb;
+    border: 1px solid #2e2828;
     padding:1rem;
     border-radius: 0.75rem;
     margin:1rem;
@@ -59,7 +59,7 @@ img{
 }
 a i{
     margin: 1rem;
-    color:rgb(236, 235, 228);
+    color:rgb(46, 47, 48);
     text-decoration: none;
 }
 .home a i{
