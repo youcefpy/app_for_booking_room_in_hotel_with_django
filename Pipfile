@@ -12,6 +12,10 @@ reportlab = "*"
 xhtml2pdf = "*"
 psycopg2 = "*"
 django-paypal = "*"
+django-background-tasks = "*"
+celery = "*"
+django-celery-beat = "*"
+redis = "*"
 
 [dev-packages]
 

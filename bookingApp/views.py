@@ -1,6 +1,3 @@
-
-import os
-from uuid import uuid4 
 from django.conf import settings
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
 from .models import Booking, Room,Contact,TempBooking,CommentRoom,Category
@@ -10,11 +7,6 @@ from django.views.generic import ListView,FormView,View
 from .booking_function import availability
 from django.contrib import messages
 
-from django.http import FileResponse
-import io
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter
 
 from threading import Timer
 from django.utils import timezone
@@ -23,12 +15,12 @@ from django.templatetags.static import static
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
-from paypal.standard.forms import PayPalPaymentsForm
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from datetime import datetime, timedelta
+from datetime import datetime
+from .tasks import reset_availability
 
 
 # Create your views here.
@@ -45,6 +37,15 @@ def index(request):
     }
     return render(request,'index.html',context)
 
+
+def list_rooms(request):
+    room = Room.objects.all()
+
+    context={
+        'rooms':room
+    }
+
+    return render(request,'rooms.html',context)
 
 
 def booking_list(request):   
@@ -132,6 +133,7 @@ class RoomListView(ListView):
 #     }
 
 #     return render(request,'appart_details.html',context)
+
 
 class Room_details_view(View):
     def get(self, request, *args, **kwargs):
@@ -252,6 +254,7 @@ class Room_details_view(View):
         room.is_available = False
         room.save()
 
+        # Schedule the task to run at the checkout time
         check_out = data['check_out']
         if isinstance(check_out, datetime):
             check_out_dt = check_out
@@ -260,13 +263,14 @@ class Room_details_view(View):
             check_out_dt = timezone.make_aware(check_out_dt, timezone.get_current_timezone())
 
         now = timezone.now()
-        time_is_sec = (check_out_dt - now).total_seconds()
-        Timer(time_is_sec, self.reset_availability, [room.id]).start()
+        time_in_seconds = (check_out_dt - now).total_seconds()
 
-    def reset_availability(self, room_id):
-        room = Room.objects.get(id=room_id)
-        room.is_available = True
-        room.save()
+        reset_availability(room.id)
+
+
+
+
+
 
 def gen_pdf(request,booking_id):
     booking = get_object_or_404(Booking,id=booking_id)

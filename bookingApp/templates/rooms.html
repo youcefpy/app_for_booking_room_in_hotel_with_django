@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block titile %}Rooms hotel{% endblock titile %}
+
+
+{% block content %}
+    <div class="container">
+        <h1>Rooms</h1>
+        <br/>
+        <div class="row row-cols-1 row-cols-md-3 g-4 appart-card-index"> 
+            {% for room in rooms  %}   
+                {% if room.is_available %}                
+                    <div class="col">
+                        <a href="{% url 'roomDetails' room.id %}" class="card-appart-ind">
+                            <div class="card">
+                                <img src="{{ room.image_room.url }}" height="300px" class="card-img-top img-apprat-index"  alt="Image Room">
+                                <hr/>
+                                <div class="card-body">
+                                    <div>
+                                    <p> <strong>Room ID : {{ room.id }}</strong></p>
+                                    <p> <strong>Category : {{ room.category_room }}</strong></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="card-text"><small class="text-muted"><i class="fa fa-bed"></i> {{ room.beds }} bed(s)</small></p>
+                                        <p class="card-text"><small class="text-muted"><i class="fa fa-bath"></i> {{ room.bath }} bath(es)</small></p>
+                                        <p class="card-text"><small class="text-muted"><i class="fas fa-home"></i> {{ room.space }} m2</small></p>
+                                        
+                                    </div>
+                                    <div class="price-per-night-div">
+                                        <p class="para-price">Price: {{ room.price_per_night }} DA/Night</p>
+
+                                    </div>
+                                    <a class="btn btn-primary" href="{% url 'roomDetails' room.id %}">Book Now</a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}  
+
+            {% endfor %} 
+        </div>
+    </div>
+
+{% endblock  %}

@@ -1,11 +1,12 @@
 from django.urls import path
-from .views import index,Booking_view,Room_details_view,booking_list,delete_booking,contact,search_room_category,gen_pdf,PayPalPaymentView
+from .views import index,Booking_view,Room_details_view,booking_list,delete_booking,contact,search_room_category,gen_pdf,PayPalPaymentView,list_rooms
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
 urlpatterns = [
     path('',index,name='index'),
+    path("rooms/", list_rooms, name="list_rooms"),
     path('booking/',Booking_view.as_view(),name='Booking_view'),
     path('booking_list/',booking_list,name='booking_list'),
     path('RoomDetails/<int:id>',Room_details_view.as_view(),name='roomDetails'),

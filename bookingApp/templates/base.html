@@ -18,128 +18,49 @@
     <script src="https://kit.fontawesome.com/692189991f.js" crossorigin="anonymous"></script>
 
 
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">  
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Libraries Stylesheet -->
+    <link href=" {% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
 
     <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
-    <nav>
-        <div class="logo">
-          <img src="{% static 'images/logo_size512.png' %}" alt="logo" />
-          <h1>Vacconci</h1>
-        </div>
-        <ul>
-          <li>
-            <a href="{% url 'index' %}">Home</a>
-          </li>
-          <li>
-            <ul id="nav">
-              <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <li><a class="dropdown-item" href="{% url 'index' %}">All Rooms</a></li>
-                      <li><hr class="dropdown-divider" /></li>
-                      {% for category in list_category %}
-                          <li>
-                              <a class="dropdown-item" href="{% url 'search_room_category' category.name_category %}">
-                                  {{ category.name_category }}
-                              </a>
-                          </li>
-                      {% endfor %}
-                  </ul>
-              </li>
-            </ul>
-          
-          </li>
-          <li>
-            <a href="{% url 'services' %}">Services</a>
-          </li>
+    {% include "header.html" %} 
+    {% block content %}{% endblock content %}
+    {% include "newsletter.html" %}
+    {% include 'footer.html' %}
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
-          <li>
-            <a href="{% url 'about' %}">About</a>
-          </li>
-          
-          <li>
-            <a href="{% url 'contact' %}">Contact Us</a>
-          </li>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/moment.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
 
-          {% if user.is_authenticated %}
-
-                <li>
-                  <a href="{% url 'booking_list' %}" >Your Booking</a>
-                </li>
-                <li>
-                    <a href="{% url 'account_logout' %}" >Logout</a>
-                </li>
-                
-                <li style="font-size:1.2rem;font-weight:bold;">
-                  {% comment %} <a href="{% url 'accounts' %}">Contact Us</a> {% endcomment %}
-                  Hello {{ user }}
-              </li>
-
-          {% else %}
-
-                <li>
-                    <a href="{% url 'account_login' %}">Login</a>
-                </li>
-                <li>
-                    <a href="{% url 'account_signup' %}">Signup</a>
-                </li>
-
-          {% endif %}
-        </ul>
-        <div class="hamburger">
-          <span class="line"></span>
-          <span class="line"></span>
-          <span class="line"></span>
-        </div>
-      </nav>
-      <div class="menubar">
-        <ul>
-          <li>
-            <a href="{% url  'index' %}">Home</a>
-          </li>
-          <li>
-            <a href="{% url 'services' %}">Services</a>
-          </li>
-          <li>
-            <a href="{% url 'about' %}">About</a>
-          </li>
-          <li>
-            <a href="{% url 'contact' %}">Contact Us</a>
-          </li>
-
-              {% if user.is_authenticated %}
-
-                <li>
-                  <a href="{% url 'booking_list' %}" >Your Booking</a>
-                </li>
-                <li>
-                    <a href="{% url 'account_logout' %}" >Logout</a>
-                </li>
-                
-                <li style="font-size:1.2rem;font-weight:bold;">
-                  {% comment %} <a href="{% url 'accounts' %}">Contact Us</a> {% endcomment %}
-                  Hello {{ user }}
-              </li>
-
-              {% else %}
-
-                    <li>
-                        <a href="{% url 'account_login' %}">Login</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'account_signup' %}">Signup</a>
-                    </li>
-
-            {% endif %}
-        </ul>
-      </div>
-
-
-        {% block content %}
-        {% endblock content %}
+    <!-- Template Javascript -->
     <script src="{% static 'js/script.js' %}"></script>
-    
+  </div>
     
 </body>
 </html>

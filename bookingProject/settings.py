@@ -52,6 +52,8 @@ INSTALLED_APPS = [
 
     'paypal.standard.ipn',
 
+    'django_celery_beat',
+
 ]
 
 MIDDLEWARE = [
@@ -174,3 +176,14 @@ LOGIN_REDIRECT_URL = 'index'
 
 PAYPAL_TEST = True
 PAYPAL_RECEIVER_EMAIL = 'sb-131l331298786@business.example.com'
+
+
+
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
