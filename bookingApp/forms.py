@@ -11,6 +11,11 @@ class AvailabilityForm(forms.Form):
     check_out = forms.DateTimeField(required=True,input_formats=["%Y-%m-%d %H:%M"],widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
 
 
+class SeachAvailableRoom(forms.Form):
+    check_in = forms.DateTimeField(required=True, input_formats=['%Y-%m-%dT%H:%M'])
+    check_out = forms.DateTimeField(required=True, input_formats=['%Y-%m-%dT%H:%M'])
+
+
 class PaymentMethodForm(forms.Form):
     CHOICES = [('pay_on_hotel','Pay on the Hotel'),('paypal_payment','Pay With paypal')]
     payment_method = forms.CharField(label="method_payment",widget=forms.RadioSelect(choices=CHOICES))

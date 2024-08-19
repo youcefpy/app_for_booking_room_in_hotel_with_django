@@ -6,7 +6,7 @@ from .models import Room,RoomImages, Booking,Contact,CommentRoom,Category
 
 class RoomAdmin(admin.ModelAdmin):
     model = Room
-    list_display = ['category_room','space','beds','bath','description','price_per_night','is_available']
+    list_display = ['id','category_room','space','beds','bath','description','price_per_night','is_available']
 
 admin.site.register(Category)
 admin.site.register(Contact)

@@ -1,15 +1,13 @@
 from django.conf import settings
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
 from .models import Booking, Room,Contact,TempBooking,CommentRoom,Category
-from .forms import AvailabilityForm,ContactForm,PaymentMethodForm,CustomPayPalPaymentsForm,CommentRoomForm
+from .forms import AvailabilityForm,ContactForm,PaymentMethodForm,CustomPayPalPaymentsForm,CommentRoomForm,SeachAvailableRoom
 from django.urls import reverse
 from django.views.generic import ListView,FormView,View
 from .booking_function import availability
 from django.contrib import messages
 
 
-from threading import Timer
-from django.utils import timezone
 from django.templatetags.static import static
 
 from django.template.loader import get_template
@@ -20,8 +18,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from datetime import datetime
-from .tasks import reset_availability
-
+from django.utils import timezone
+import pytz
 
 # Create your views here.
 
@@ -180,15 +178,25 @@ class Room_details_view(View):
                 if availability.booking_logic(room, data['check_in'], data['check_out']):
                     available_room.append(room)
 
-            today = timezone.now()
+
+            paris_tz = pytz.timezone('Europe/Paris')
+            today = timezone.now().astimezone(paris_tz)
+
+            check_in = data['check_in']
+            check_out = data['check_out']
+
+            print(f'check_in : {check_in}')
+            print(f'check out : {check_out}')
+            print(f'today : {today}')
 
             if self.request.user.is_authenticated:  
 
-                if data['check_out'] < data['check_in']:
+                if check_out < check_in:
                     return HttpResponse('Invalid Booking, The Date in should be less then the Date out, So please try again.')
+                
+                if today.day > check_in.day or today.day > check_out.day : 
+                    return HttpResponse('Invalid Booking, The Date in should be less then the Date in, So please try again.')
 
-                if data['check_in'] < today or data['check_out'] < today:
-                    return HttpResponse('Invalid Booking, The Date should equal or sup to the date of today. Please try again')
 
                 if len(available_room) > 0:
                     room = available_room[0]
@@ -203,7 +211,8 @@ class Room_details_view(View):
                             date_out=data['check_out'],
                             total=total_cost_room,
                         )
-                        self.complete_booking(booking, room, data)
+                        self.complete_booking(booking, room)
+                        
                         return render(request, 'validation_booking.html', {'booking': booking})
                     else:
                         temp_booking = TempBooking.objects.create(
@@ -249,27 +258,46 @@ class Room_details_view(View):
             }
             return render(request, "room_details.html", context)
 
-    def complete_booking(self, booking, room, data):
+    def complete_booking(self, booking, room):
         booking.save()
         room.is_available = False
+        print(f'room avivalability : {room.is_available}')
         room.save()
 
-        # Schedule the task to run at the checkout time
-        check_out = data['check_out']
-        if isinstance(check_out, datetime):
-            check_out_dt = check_out
-        else:
-            check_out_dt = datetime.combine(check_out, datetime.min.time())
-            check_out_dt = timezone.make_aware(check_out_dt, timezone.get_current_timezone())
-
-        now = timezone.now()
-        time_in_seconds = (check_out_dt - now).total_seconds()
-
-        reset_availability(room.id)
-
-
-
-
+        
+def list_free_booking_room(request):
+    if request.method == 'POST':
+        form = SeachAvailableRoom(request.POST)
+        if not form.is_valid():
+            print(form.errors)
+            print('Raw POST data:', request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            check_in = data['check_in']
+            check_out = data['check_out']
+            
+            list_available_rooms = []
+            rooms = Room.objects.all()
+            for room in rooms:
+                if availability.booking_logic(room,check_in,check_out):
+                    list_available_rooms.append(room)
+            print(list_available_rooms)
+            context={
+                'form':form,
+                'list_available_rooms':list_available_rooms,
+            }
+            print('if is executed')
+            return render(request,'serach_free_booking_room.html',context)
+            
+        else : 
+            form = SeachAvailableRoom()
+            print(form.errors)
+            context={
+                'form':form,
+            }
+            print('else is executed')
+            return render(request,'serach_free_booking_room.html',context)
+        
 
 
 def gen_pdf(request,booking_id):

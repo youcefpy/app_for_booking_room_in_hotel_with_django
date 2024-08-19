@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index,Booking_view,Room_details_view,booking_list,delete_booking,contact,search_room_category,gen_pdf,PayPalPaymentView,list_rooms
+from .views import index,Booking_view,Room_details_view,booking_list,delete_booking,contact,search_room_category,gen_pdf,PayPalPaymentView,list_rooms,list_free_booking_room
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
@@ -15,6 +15,7 @@ urlpatterns = [
     path("about/",TemplateView.as_view(template_name='about.html'),name='about'),
     path('conatct/',contact,name="contact"),
     path('search_room_category/<str:category>', search_room_category, name='search_room_category'),
+    path('list_free_booking_room/',list_free_booking_room,name='list_free_booking_room'),
     path('gen_pdf/<int:booking_id>/',gen_pdf,name="gen_pdf"),
     path('paypal_payment/<int:temp_booking_id>/',PayPalPaymentView.as_view(),name="payment_success")
 ]

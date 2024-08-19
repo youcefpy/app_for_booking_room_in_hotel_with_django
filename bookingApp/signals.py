@@ -1,10 +1,13 @@
 from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
 from django.dispatch import receiver
-from django.shortcuts import get_object_or_404
+# from django.shortcuts import get_object_or_404
 from .models import Booking, TempBooking
-from .views import Appartement_details_view
+from .views import Room_details_view
 import logging
+# from django.utils import timezone
+# from django.db.models.signals import post_save
+
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +24,7 @@ def valid_ipn_signal(sender, **kwargs):
                 date_out=temp_booking.date_out,
                 total=temp_booking.total,
             )
-            Appartement_details_view().complete_booking(booking, temp_booking.appart, {
+            Room_details_view().complete_booking(booking, temp_booking.appart, {
                 'check_in': temp_booking.date_enter,
                 'check_out': temp_booking.date_out,
             })
@@ -32,3 +35,15 @@ def valid_ipn_signal(sender, **kwargs):
             logger.error(f"TempBooking with id {ipn.invoice} does not exist.")
         except Exception as e:
             logger.error(f"Error processing IPN: {e}")
+
+
+
+# @receiver(post_save, sender=Booking)
+# def update_room_availability(sender, instance, **kwargs):
+    
+#     now = timezone.now()
+
+#     if instance.date_out < now:
+#         room = instance.room
+#         room.is_available = True
+#         room.save()

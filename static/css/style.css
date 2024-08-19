@@ -464,7 +464,7 @@ li.nav-item.dropdown{
   position: relative;
   height: 100%;
   min-height: 500px;
-  background: linear-gradient(rgba(15, 23, 43, .1), rgba(15, 23, 43, .1)), url(../images/video.jpg);
+  background: linear-gradient(rgba(15, 23, 43, .1), rgba(15, 23, 43, .1)), url(../images/about-1.jpg);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -579,7 +579,7 @@ li.nav-item.dropdown{
 
 /*** Testimonial ***/
 .testimonial {
-  background: linear-gradient(rgba(15, 23, 43, .7), rgba(15, 23, 43, .7)), url(../img/carousel-2.jpg);
+  background: linear-gradient(rgba(15, 23, 43, .7), rgba(15, 23, 43, .7)), url(../images/carousel-2.jpg);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
