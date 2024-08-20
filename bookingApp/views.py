@@ -365,10 +365,7 @@ class PayPalPaymentView(View):
                 total=temp_booking.total,
                 is_paied = True
             )
-            Room_details_view().complete_booking(booking, temp_booking.room, {
-                'check_in': temp_booking.date_enter,
-                'check_out': temp_booking.date_out,
-            })
+            Room_details_view().complete_booking(booking, temp_booking.room)
             temp_booking.is_paid = True
             temp_booking.save()
 
@@ -386,10 +383,7 @@ class PayPalPaymentView(View):
                 total=temp_booking.total,
                 is_paied = True
             )
-            Room_details_view().complete_booking(booking, temp_booking.room, {
-                'check_in': temp_booking.date_enter,
-                'check_out': temp_booking.date_out,
-            })
+            Room_details_view().complete_booking(booking, temp_booking.room)
             temp_booking.is_paid = True
             temp_booking.save()
 
