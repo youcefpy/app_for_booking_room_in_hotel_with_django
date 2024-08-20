@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-import datetime
+from phonenumber_field.modelfields import PhoneNumberField
+
 # Create your models here.
 
 
@@ -16,10 +17,14 @@ class Room(models.Model):
     space = models.DecimalField(max_digits=10,decimal_places=2)
     beds = models.IntegerField(default=1)
     bath = models.IntegerField(default=1) 
+    adult = models.IntegerField(default=1)
+    child = models.IntegerField(default=0)
     description = models.TextField(max_length=10000,blank=True)
     image_room = models.ImageField(upload_to='media')
     price_per_night = models.DecimalField(max_digits=10,decimal_places=2,null=False)
     is_available = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
     def __str__(self):
         return f'category :{self.category_room} {self.space} m2, beds : {self.beds}'
 
@@ -36,10 +41,13 @@ class Booking(models.Model):
 
     user= models.ForeignKey(User,on_delete=models.CASCADE)
     room= models.ForeignKey(Room,on_delete=models.CASCADE)
+    name = models.CharField(max_length=255,null=False)
+    phone_number = PhoneNumberField(blank=False,null=False)
     date_enter= models.DateTimeField(blank=True)
     date_out= models.DateTimeField(blank=True)
     total= models.DecimalField(max_digits=10,decimal_places=2)
     is_paied= models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
     
     # def total(self):
     #     return self.appart.price_per_night * (self.date_out-self.date_enter)
@@ -52,6 +60,8 @@ class Booking(models.Model):
 class TempBooking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255,null=False)
+    phone_number = PhoneNumberField(blank=False,null=False)
     date_enter = models.DateField()
     date_out = models.DateField()
     total = models.DecimalField(max_digits=10, decimal_places=2)

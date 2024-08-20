@@ -49,7 +49,7 @@
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo eveniet veniam tempora fuga tenetur placeat sapiente architecto illum soluta consequuntur, aspernatur quidem at sequi ipsa!</p>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, perferendis eius. Dignissimos, labore suscipit. Unde.</p>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 d-flex justify-content-between">
                     <p class="card-text"><small class="text-muted"><i class="fa fa-bed"></i> {{ room_id.beds }} bed(s)</small></p>
                     <p class="card-text"><small class="text-muted"><i class="fa fa-bath"></i> {{ room_id.bath }} bath(es)</small></p>
                     <p class="card-text"><small class="text-muted"><i class="fas fa-home"></i> {{ room_id.space }} m2</small></p>
@@ -96,6 +96,7 @@
     </div>
     
     <div class="container" >
+        <h4>Leave a Comment</h4>
         <form method="POST">  
             {% csrf_token %}
             {% for field_comment in formComment  %}

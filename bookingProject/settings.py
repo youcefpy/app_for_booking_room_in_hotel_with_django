@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bookingApp',
     'bookingApp.booking_function',
 
+    'phonenumber_field',
 
     'widget_tweaks',
 

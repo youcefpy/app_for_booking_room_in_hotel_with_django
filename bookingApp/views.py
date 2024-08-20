@@ -182,6 +182,8 @@ class Room_details_view(View):
             paris_tz = pytz.timezone('Europe/Paris')
             today = timezone.now().astimezone(paris_tz)
 
+            name = data['name']
+            phone_number = data['phone_number']
             check_in = data['check_in']
             check_out = data['check_out']
 
@@ -207,6 +209,8 @@ class Room_details_view(View):
                         booking = Booking.objects.create(
                             user=self.request.user,
                             room=room,
+                            name=name,
+                            phone_number = (phone_number),
                             date_enter=data['check_in'],
                             date_out=data['check_out'],
                             total=total_cost_room,
@@ -218,6 +222,8 @@ class Room_details_view(View):
                         temp_booking = TempBooking.objects.create(
                             user=self.request.user,
                             room=room,
+                            name=name,
+                            phone_number =(phone_number),
                             date_enter=data['check_in'],
                             date_out=data['check_out'],
                             total=total_cost_room,
@@ -360,6 +366,8 @@ class PayPalPaymentView(View):
             booking = Booking.objects.create(
                 user=temp_booking.user,
                 room=temp_booking.room,
+                name= temp_booking.name,
+                phone_number=(temp_booking.phone_number),
                 date_enter=temp_booking.date_enter,
                 date_out=temp_booking.date_out,
                 total=temp_booking.total,
@@ -378,6 +386,8 @@ class PayPalPaymentView(View):
             booking = Booking.objects.create(
                 user=temp_booking.user,
                 room=temp_booking.room,
+                name= temp_booking.name,
+                phone_number=(temp_booking.phone_number),
                 date_enter=temp_booking.date_enter,
                 date_out=temp_booking.date_out,
                 total=temp_booking.total,

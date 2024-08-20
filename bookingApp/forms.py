@@ -3,10 +3,13 @@ from django.conf import settings
 from .models import CommentRoom
 from django.utils.html import format_html
 from paypal.standard.forms import PayPalPaymentsForm
+from phonenumber_field.formfields import PhoneNumberField
 
 class AvailabilityForm(forms.Form):
 
     # appart_list =forms.ModelChoiceField(queryset=Appartment.objects.all(),empty_label="select_appartement")
+    name=forms.CharField(max_length=255)
+    phone_number=PhoneNumberField()
     check_in = forms.DateTimeField(required=True,input_formats=['%Y-%m-%d %H:%M'],widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
     check_out = forms.DateTimeField(required=True,input_formats=["%Y-%m-%d %H:%M"],widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
 
