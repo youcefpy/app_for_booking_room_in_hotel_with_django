@@ -1,4 +1,4 @@
- Hotelier - Hotel Reservation App
+# Hotelier - Hotel Reservation App
 
 **Hotelier** is a web application designed to streamline the process of reserving a room in a hotel. This app offers a user-friendly interface, robust data storage, secure authentication, and a variety of payment options to provide a seamless experience for both hotel guests and administrators.
 
@@ -21,47 +21,57 @@ _Add screenshots of the application here._
 _Add a link to the demo video here._
 
 ## Setup and Installation
-
-1. **Install Dependencies**: 
+0. **Install pipenv**: For installing the pipenv use this command : 
     ```bash
-    pipenv install shell
+    pip install pipenv
+    ```
+1. **Activate the virtual envirement**: Use the folowing command :
+    ```bash
+    pipenv shell
     ```
 
 2. **Database Setup**: Create a PostgreSQL database and link it to the app in `settings.py`.
 
-3. **Migrations**: Run the following command :
+3. **Migrations**: Create initial migrations using the following command:
     ```bash
     py manage.py makemigrations
     ```
-4. **Migrate**: Run the following command for migrate:
+4. **Migrate**: Apply the migrations to the database:
     ```bash
     py manage.py migrate
     ```
-5. **Run the server**: Run the following command for runing the localserver (localhost):
+5. **Run the server**: Start the local server (localhost) with the command:
     ```bash
     py manage.py runserver
     ```
-## Redis For lanching the celery and make the task
+## Redis and Celery Setup
 
-1. **Run the redis Server**: you should install redis-server and run the command : 
+1. **Run the redis Server**: Install Redis and start the server using the command:
     ```bash
     redis-server.exe
     ```
 
-## Run celery worker and beat
-
-1. **Run the celery worker**: Run the following command for celery worker:
+2. **Run the celery worker**: Start the Celery worker to handle background tasks:
     ```bash
     celery -A bookingProject worker -l info --pool=solo
     ```
 
-2. **Run the celery beat**: Run the following command for celery beat:
+3. **Run the celery beat**: Start the Celery beat scheduler:
     ```bash
     celery -A bookingProject beat -l info
     ```
 
-3. **Run the celery inspect**: Run the celery instecy for checking if the task is linked to the celery
+4. **Run the celery inspect**: Check if tasks are registered with Celery:
 
     ```bash
     celery -A bookingProject inspect registered
     ```
+
+# Front-End Template
+The front-end template is based on designs from [HTML Codex](https://htmlcodex.com). Adjustments were made to fit the needs of this project.
+
+# Contributing
+Contributions to Hotelier are welcome! If you'd like to contribute, please get in touch.
+
+# Contact 
+If you have any questions or need further assistance, feel free to contact me at: youcefboutiche28@gmail.com
