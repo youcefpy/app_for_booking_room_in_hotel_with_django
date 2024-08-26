@@ -22,11 +22,42 @@ _Add a link to the demo video here._
 
 ## Setup and Installation
 
-1. **Install Dependencies**: Install the necessary dependencies and libraries listed in the `requirements.txt` file using the following command:
+1. **Install Dependencies**: 
     ```bash
-    pipenv install
+    pipenv install shell
     ```
 
 2. **Database Setup**: Create a PostgreSQL database and link it to the app in `settings.py`.
 
-3. **Migrations**: Run the following
+3. **Migrations**: Run the following command :
+    ```bash
+    py manage.py makemigrations
+    ```
+4. **Migrate**: Run the following command for migrate:
+    ```bash
+    py manage.py migrate
+    ```
+## Redis For lanching the celery and make the task
+
+1. **Run the redis Server**: you should install redis-server and run the command : 
+    ```bash
+    redis-server.exe
+    ```
+
+## Run celery worker and beat
+
+1. **Run the celery worker**: Run the following command for celery worker:
+    ```bash
+    celery -A bookingProject worker -l info --pool=solo
+    ```
+
+2. **Run the celery beat**: Run the following command for celery beat:
+    ```bash
+    celery -A bookingProject beat -l info
+    ```
+
+3. **Run the celery inspect**: Run the celery instecy for checking if the task is linked to the celery
+
+    ```bash
+    celery -A bookingProject inspect registered
+    ```
