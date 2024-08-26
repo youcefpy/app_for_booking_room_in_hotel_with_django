@@ -37,6 +37,10 @@ _Add a link to the demo video here._
     ```bash
     py manage.py migrate
     ```
+5. **Run the server**: Run the following command for runing the localserver (localhost):
+    ```bash
+    py manage.py runserver
+    ```
 ## Redis For lanching the celery and make the task
 
 1. **Run the redis Server**: you should install redis-server and run the command : 
