@@ -54,8 +54,12 @@ def booking_list(request):
     else : 
         booking_list = Booking.objects.filter(user = request.user)
     
+    
+    paris_tz = pytz.timezone('Europe/Paris')
+    today = timezone.now().astimezone(paris_tz)
     context={
         'booking_list':booking_list,
+        'now':today
     }
 
     return render(request,"booking_list.html",context)
@@ -196,8 +200,8 @@ class Room_details_view(View):
                 if check_out < check_in:
                     return HttpResponse('Invalid Booking, The Date in should be less then the Date out, So please try again.')
                 
-                if today.day > check_in.day or today.day > check_out.day : 
-                    return HttpResponse('Invalid Booking, The Date in should be less then the Date in, So please try again.')
+                if (today.day > check_in.day or today.day > check_out.day) and (today.month > check_in.month or today.month > check_out.month) : 
+                    return HttpResponse('Invalid Booking, The Date in should be less then the Date, So please try again.')
 
 
                 if len(available_room) > 0:
@@ -279,11 +283,13 @@ def list_free_booking_room(request):
             print('Raw POST data:', request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            adult = data['adult']
+            child = data['child']
             check_in = data['check_in']
             check_out = data['check_out']
             
             list_available_rooms = []
-            rooms = Room.objects.all()
+            rooms = Room.objects.filter(adult=adult,child=child)
             for room in rooms:
                 if availability.booking_logic(room,check_in,check_out):
                     list_available_rooms.append(room)

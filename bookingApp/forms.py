@@ -15,6 +15,8 @@ class AvailabilityForm(forms.Form):
 
 
 class SeachAvailableRoom(forms.Form):
+    adult = forms.DecimalField(required=True)
+    child= forms.DecimalField(required=True)
     check_in = forms.DateTimeField(required=True, input_formats=['%Y-%m-%dT%H:%M'])
     check_out = forms.DateTimeField(required=True, input_formats=['%Y-%m-%dT%H:%M'])
 

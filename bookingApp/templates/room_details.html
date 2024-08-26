@@ -33,26 +33,19 @@
             <div class="vl"></div>
             <!-- card right -->
             <div class="appart-content">
-                <h2 class="appart-title">Room ID : {{room_id.id}}</h2>
-                <div class="appart-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <span>4.7(21)</span>
-                </div>
-
+                <h4 class="appart-title">Room ID: {{room_id.id}}</h4>
+                <h2 class="mt-4">Category room: {{ room_id.category_room.name_category }}</h2>
                 <div class="appart-detail">
-                    <h2>About this Room:</h2>
+                    <h6>About this Room:</h6>
                     <p>{{ room_id.description }}</p>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo eveniet veniam tempora fuga tenetur placeat sapiente architecto illum soluta consequuntur, aspernatur quidem at sequi ipsa!</p>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, perferendis eius. Dignissimos, labore suscipit. Unde.</p>
                 </div>
                 <div class="mb-3 d-flex justify-content-between">
-                    <p class="card-text"><small class="text-muted"><i class="fa fa-bed"></i> {{ room_id.beds }} bed(s)</small></p>
-                    <p class="card-text"><small class="text-muted"><i class="fa fa-bath"></i> {{ room_id.bath }} bath(es)</small></p>
-                    <p class="card-text"><small class="text-muted"><i class="fas fa-home"></i> {{ room_id.space }} m2</small></p>
+                    <p class="card-text"><small class="border-end text-muted me-3 pe-3"><i class="fa fa-bed"></i> {{ room_id.beds }} bed(s)</small></p>
+                    <p class="card-text"><small class="border-end text-muted me-3 pe-3"><i class="fa fa-bath"></i> {{ room_id.bath }} bath(es)</small></p>
+                    <p class="card-text"><small class="border-end me-3 pe-3"><i class="fa fa-male me-2"></i>{{ room_id.adult }} adult</small></p>
+                    <p class="card-text"><small class="text-muted me-3 pe-3"><i class="fa fa-child me-2"></i>{{ room_id.child }} child</p></small>
                 </div>
                 <div class="appart-price">
                     <p class="new-price">Price: <span>{{ room_id.price_per_night }} DA/Night</span></p>

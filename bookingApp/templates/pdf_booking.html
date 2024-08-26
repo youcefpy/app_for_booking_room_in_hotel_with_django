@@ -7,6 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="Boutiche Youcef" content="colorlib.com">
+
     <title>booking {{ user }} {{ booking.id }}</title>
 
     <style>
@@ -20,21 +21,20 @@
 <body sytle="font-size:1.5rem">
 
     <header>
-        <table style="width: 100%; font-size: 2rem; color: #256eff;">
+        <div style="width: 100%; font-size: 2.5rem; color: #FEA116;"> 
+            <h1>HOTELIER</h1>
+        </div>
+        {% comment %} <table style="width: 100%; font-size: 2rem; color: orange;">
             <tr >
                 <td style="width: 20%;">
                     <img src="{{ static_url }}images/logo_size512.png" alt="logo" width = "150px"/>
                 </td>
                 <td style="width: 80%;">
-                    <h1 style="margin: 0;">Hotel Booking tutorial</h1>
+                    <h1 class="m-0 text-primary text-uppercase">HOTELIER</h1>
                 </td>
             </tr>
 
-        </table>
-        {% comment %} <div class="div-header" style="font-size:2rem;color:#256eff; display:flex; flex-direction:row;">
-            <p><img src="{{ static_url }}images/logo_size512.png" alt="logo" width = "200px"/></p>
-            <h1>Hotel Booking tutorial</h1>
-        </div> {% endcomment %}
+        </table>  {% endcomment %}
     </header>
     <hr/>
     <div style="display:flex;flex-direction:column;justify-content:center;">

@@ -1,67 +1,40 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
+<link rel="stylesheet" href="{% static 'css/booking_list_view.css' %}">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking List</title>
-    <script src="https://kit.fontawesome.com/692189991f.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{% static 'css/booking_list_view.css' %}">
-</head>
 
-<body>
-    <div class="content">
-        <div class="header">
-            <div class="headings">
-                <h1>Your Bookings</h1>
-                <h2>Welcome dear {{user}}</h2>
+{% block title %}My Booking List{% endblock title %}
+
+{% block content %}
+    <div class="row row-cols-1 row-cols-md-3 g-3 mt-2 px-2">
+        {% for booking in booking_list  %}        
+            <div class="col">
+                <div class="card">
+                    <img src="{{ booking.room.image_room.url }}" class="card-img-top px-2 py-2" alt="image room" >
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>Room ID:</strong> {{booking.room.id}}</h5>
+                        <p class="card-text"><strong>Name:</strong> {{ booking.name }}</p>
+                        <p class="card-text"><strong>Phone Number:</strong> {{ booking.phone_number }}</p>
+                        <p class="card-text"><strong>Date IN:</strong> {{ booking.date_enter }}</p>
+                        <p class="card-text"><strong>Date Out:</strong> {{ booking.date_out }}</p>
+                        <p class="card-text"><strong>Bed(s):</strong> {{ booking.room.beds }}</p>
+                        <p class="card-text"><strong>Bath(es):</strong> {{ booking.room.bath }}</p>
+                        <p class="card-text"><strong>Price Per night</strong>: {{ booking.room.price_per_night }} DA</p>
+                        <p class="card-text"><strong>Total:</strong> {{ booking.total }} DA</p>
+                        {% if booking.is_paied %}
+                            <p class="card-text"><strong>Paied</strong></p>
+
+                        {% else %}
+                            <p class="card-text"><strong>NOT PAIED</strong></p>
+                        {% endif %}
+                        {% if booking.date_out > now  %}
+                            <p class="card-text"><a href="{% url 'delete_booking' booking.id %}" class="btn btn-danger" onclick="return confirm('Are Your sure you want to cancel the booking')">Cancel The Booking</a></p>
+                            <p class ="card-text"><a href="{% url 'gen_pdf' booking.id %}" class="btn btn-success">Download the PDF</a></p>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            <div class="home">
-                <!-- Div 1: Back to Home -->
-                <div class="home">
-                    <a href="{% url 'index' %}"><i class="fas fa-arrow-alt-circle-left">Home</i></a>
-                </div>
-            </div>
+        {% endfor %}
+    </div>
 
-        </div>
-
-        <div class="bookings">
-            {% for booking in booking_list %}
-            <div class="booking">
-                <img src="{{ booking.room.image_room.url }}" alt="Image appartement">
-                <div class="category">
-                    <h2>Room ID :{{booking.room.id}}</h2>
-                </div>
-                <div class="customer-name">
-                    <strong>Costumer : {{ user.username }}</strong>
-                </div>
-                <div class="from">
-                    <h3>From: {{booking.date_enter}}</h3>
-                </div>
-                <div class="to">
-                    <h3>To: {{booking.date_out}}</h3>
-                </div>
-                <div class="beds">
-                    <h3>Beds: {{booking.appart.beds}}</h3>
-                </div>
-                <div class="capacity">
-                    <h3>Total: {{booking.total}} DA</h3>
-                </div>
-                <div class="capacity">
-                    <h3>IS Paided: {{booking.is_paied}}</h3>
-                </div>
-                <div class="cancel">
-                    <a href="{% url 'delete_booking' booking.id %}" class="invisible" onclick="return confirm('Are you sure you want to delete this booking')" >
-                        <i class="far fa-2x fa-times-circle"> 
-                            Cancel Booking
-                        </i>
-                    </a>
-                </div>
-
-            </div>
-            {% endfor %}
-        </div>
-</body>
-
-</html>
+{% endblock content %}

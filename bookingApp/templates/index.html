@@ -55,11 +55,17 @@
                 <div class="row g-2">
                     <div class="col-md-10">
                         <div class="row g-2">
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <input type="datetime-local" name="check_in" class="form-control" placeholder="Check in" required />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <input type="datetime-local" name="check_out" class="form-control" placeholder="Check out" required />
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="adult" class="form-control" placeholder="Adult" required />
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="child" class="form-control" placeholder="child" required />
                             </div>
                         </div>
                     </div>
@@ -146,12 +152,12 @@
             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="room-item shadow rounded overflow-hidden">
                     <div class="position-relative">
-                        <img class="img-fluid" src="{% static 'images/room-1.jpg' %}" alt="">
-                        <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">$100/Night</small>
+                        <img class="img-fluid" src="{{ 'media/media/suite-room-1.jpg' }}" alt="">
+                        <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">20000 DA/Night</small>
                     </div>
                     <div class="p-4 mt-2">
                         <div class="d-flex justify-content-between mb-3">
-                            <h5 class="mb-0">Junior Suite</h5>
+                            <h5 class="mb-0">Suite</h5>
                             <div class="ps-2">
                                 <small class="fa fa-star text-primary"></small>
                                 <small class="fa fa-star text-primary"></small>
@@ -167,8 +173,8 @@
                         </div>
                         <p class="text-body mb-3">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet lorem.</p>
                         <div class="d-flex justify-content-between">
-                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View Detail</a>
-                            <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
+                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="{% url 'roomDetails' 6 %}">View Detail</a>
+                            <a class="btn btn-sm btn-dark rounded py-2 px-4" href="{% url 'roomDetails' 6 %}">Book Now</a>
                         </div>
                     </div>
                 </div>
@@ -176,12 +182,12 @@
             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="room-item shadow rounded overflow-hidden">
                     <div class="position-relative">
-                        <img class="img-fluid" src="{% static 'images/room-2.jpg' %}" alt="">
-                        <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">$100/Night</small>
+                        <img class="img-fluid" src="{{ 'media/media/king-room-1.jpg' }}" alt="">
+                        <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">18000 DA/Night</small>
                     </div>
                     <div class="p-4 mt-2">
                         <div class="d-flex justify-content-between mb-3">
-                            <h5 class="mb-0">Executive Suite</h5>
+                            <h5 class="mb-0">King</h5>
                             <div class="ps-2">
                                 <small class="fa fa-star text-primary"></small>
                                 <small class="fa fa-star text-primary"></small>
@@ -197,8 +203,8 @@
                         </div>
                         <p class="text-body mb-3">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet lorem.</p>
                         <div class="d-flex justify-content-between">
-                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View Detail</a>
-                            <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
+                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="{% url 'roomDetails' 5 %}">View Detail</a>
+                            <a class="btn btn-sm btn-dark rounded py-2 px-4" href="{% url 'roomDetails' 5 %}">Book Now</a>
                         </div>
                     </div>
                 </div>
@@ -206,12 +212,12 @@
             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
                 <div class="room-item shadow rounded overflow-hidden">
                     <div class="position-relative">
-                        <img class="img-fluid" src="{% static 'images/room-3.jpg' %}" alt="">
-                        <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">$100/Night</small>
+                        <img class="img-fluid" src="media/media/room-5_rm4pV7P.jpg" alt="image Room">
+                        <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">5000 DA/Night</small>
                     </div>
                     <div class="p-4 mt-2">
                         <div class="d-flex justify-content-between mb-3">
-                            <h5 class="mb-0">Super Deluxe</h5>
+                            <h5 class="mb-0">Single Room</h5>
                             <div class="ps-2">
                                 <small class="fa fa-star text-primary"></small>
                                 <small class="fa fa-star text-primary"></small>
@@ -221,14 +227,14 @@
                             </div>
                         </div>
                         <div class="d-flex mb-3">
-                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>1 Bed</small>
+                            <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>1 Bath</small>
                             <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
                         </div>
                         <p class="text-body mb-3">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet lorem.</p>
                         <div class="d-flex justify-content-between">
-                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View Detail</a>
-                            <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
+                            <a class="btn btn-sm btn-primary rounded py-2 px-4" href="{% url 'roomDetails' 2 %}">View Detail</a>
+                            <a class="btn btn-sm btn-dark rounded py-2 px-4" href="{% url 'roomDetails' 2 %}">Book Now</a>
                         </div>
                     </div>
                 </div>
