@@ -191,8 +191,8 @@ class Room_details_view(View):
             check_in = data['check_in']
             check_out = data['check_out']
 
-            print(f'check_in : {check_in}')
-            print(f'check out : {check_out}')
+            print(f'check_in : {check_in.month}')
+            print(f'check out : {check_out.month}')
             print(f'today : {today}')
 
             if self.request.user.is_authenticated:  
@@ -200,8 +200,8 @@ class Room_details_view(View):
                 if check_out < check_in:
                     return HttpResponse('Invalid Booking, The Date in should be less then the Date out, So please try again.')
                 
-                if (today.day > check_in.day or today.day > check_out.day) and (today.month > check_in.month or today.month > check_out.month) : 
-                    return HttpResponse('Invalid Booking, The Date in should be less then the Date, So please try again.')
+                if check_in < today or check_out < today:
+                    return HttpResponse('Invalid Booking, Date In and Date Out should be greater than or equal to today. Please try again.')
 
 
                 if len(available_room) > 0:

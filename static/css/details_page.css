@@ -223,3 +223,12 @@
     font-size: 1.1em;
     margin-top: 10px;
 }
+
+
+@media screen and (max-width:768px) {
+    .card-wrapper-appart{
+        display: flex;
+        flex-direction: column-reverse;
+
+    }
+}

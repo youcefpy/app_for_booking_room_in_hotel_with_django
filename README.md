@@ -28,19 +28,23 @@ _Add a link to the demo video here._
 1. **Activate the virtual envirement**: Use the folowing command :
     ```bash
     pipenv shell
+    ``` 
+2. **Install the requirements**: Use this command for installing the requirements of the project:
+    ```bash
+    pipenv install -r requirements.txt
     ```
+    
+3. **Database Setup**: Create a PostgreSQL database and link it to the app in `settings.py`.
 
-2. **Database Setup**: Create a PostgreSQL database and link it to the app in `settings.py`.
-
-3. **Migrations**: Create initial migrations using the following command:
+4. **Migrations**: Create initial migrations using the following command:
     ```bash
     py manage.py makemigrations
     ```
-4. **Migrate**: Apply the migrations to the database:
+5. **Migrate**: Apply the migrations to the database:
     ```bash
     py manage.py migrate
     ```
-5. **Run the server**: Start the local server (localhost) with the command:
+6. **Run the server**: Start the local server (localhost) with the command:
     ```bash
     py manage.py runserver
     ```
