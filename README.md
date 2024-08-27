@@ -13,12 +13,15 @@
 - **Payment Options**: Pay with PayPal or upon arrival at the hotel.
 
 ## Application Screenshots
+![index-hotelier-before-auth](https://github.com/user-attachments/assets/c0cefce9-6613-4034-896c-7d8a41e3b42e)
+![index-hotelier](https://github.com/user-attachments/assets/5a37d119-e70e-4856-a609-ef6ab5942ae3)
+![rooms-page](https://github.com/user-attachments/assets/b4c2b01c-1948-4310-849b-ba599953d6f4)
+![booking-room](https://github.com/user-attachments/assets/a5594d64-e857-4632-ad9b-2ae7a488f838)
+![validation-booking](https://github.com/user-attachments/assets/92173775-93e4-441b-93ea-790bcea15d66)
+![pdf-booking](https://github.com/user-attachments/assets/f14685b6-f374-4b50-bc4b-fda8b1381f0c)
+![comment-room](https://github.com/user-attachments/assets/35bbde87-3555-410c-81bf-b0027460a985)
+![contact-page](https://github.com/user-attachments/assets/7309c169-1b85-44cf-8505-dd181797e459)
 
-_Add screenshots of the application here._
-
-## Demo
-
-_Add a link to the demo video here._
 
 ## Setup and Installation
 0. **Install pipenv**: For installing the pipenv use this command : 
