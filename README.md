@@ -23,11 +23,6 @@
 ![contact-page](https://github.com/user-attachments/assets/7309c169-1b85-44cf-8505-dd181797e459)
 
 
-
-## Demo
-
-_Add a link to the demo video here._
-
 ## Setup and Installation
 0. **Install pipenv**: For installing the pipenv use this command : 
     ```bash
