@@ -53,7 +53,7 @@ class Booking(models.Model):
     #     return self.appart.price_per_night * (self.date_out-self.date_enter)
 
     def __str__(self):
-        return f"{self.user} book room \n {self.room.id} {self.room.price_per_night} DA \n date_in {self.date_enter} \nand the date of out is {self.date_out} \n and the total for the stay is : {self.total} DA"
+        return f"{self.user} book room \n {self.room.id} {self.room.price_per_night} € \n date_in {self.date_enter} \nand the date of out is {self.date_out} \n and the total for the stay is : {self.total} €"
 
     
     
