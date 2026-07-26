@@ -10,7 +10,6 @@ django-bootstrap5-form = "==5.0.1"
 django-widget-tweaks = "==1.5.0"
 reportlab = "==4.2.2"
 xhtml2pdf = "==0.2.16"
-psycopg2 = "==2.9.9"
 django-paypal = "==2.1"
 django-background-tasks = "==1.2.5"
 celery = "==5.4.0"
@@ -68,6 +67,9 @@ vine = "==5.1.0"
 wcwidth = "==0.2.13"
 webencodings = "==0.5.1"
 django-allauth = "*"
+python-dotenv = "*"
+dotenv = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
