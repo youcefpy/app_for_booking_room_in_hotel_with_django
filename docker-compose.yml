@@ -1,0 +1,76 @@
+
+services:
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - 6379:6379
+  
+  database:
+      image: postgres:16
+      container_name: database
+      ports:
+        - 5432:5432
+      env_file:
+        - .env
+      environment:
+        - POSTGRES_DB=${NAME_DB}
+        - POSTGRES_USER=${USER}
+        - POSTGRES_PASSWORD=${PASSWORD}
+      volumes:
+        - pgdata:/var/lib/postgresql/data
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${USER} -d ${NAME_DB}"]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+  web: 
+    build: .
+    container_name: booking_django
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes: 
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - redis
+      - database
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    
+  celery_worker: 
+    build: .
+    container_name: celery_worker
+    command: celery -A bookingProject worker -l info 
+    volumes: 
+      - .:/app
+    depends_on:
+      - redis
+      - web
+      - database
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+
+  celery_beat:
+    build: . 
+    container_name: celery_beat
+    command: celery -A bookingProject beat -l info
+
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - web
+      - database
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0 
+      
+volumes:
+  pgdata:
