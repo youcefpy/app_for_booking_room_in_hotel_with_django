@@ -180,10 +180,10 @@ LOGIN_REDIRECT_URL = 'index'
 #test payment 
 
 PAYPAL_TEST = True
-PAYPAL_RECEIVER_EMAIL = 'sb-131l331298786@business.example.com'
-
-
-
+PAYPAL_RECEIVER_EMAIL = 'sb-m7lap34837961@personal.example.com'
+#sb-131l331298786@business.example.com
+# sb-m7lap34837961@personal.example.com
+# sb-m7lap34837961@personal.example.com
 
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')

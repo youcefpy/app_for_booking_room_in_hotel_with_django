@@ -232,20 +232,20 @@ class Room_details_view(View):
                             date_out=data['check_out'],
                             total=total_cost_room,
                         )
-                        total_amount_for_booking = temp_booking.total / 220
-                        total_amount_for_booking_in_usd = str(total_amount_for_booking)
                         host = request.get_host()
+                        print(f"get host ====> {host}")
                         paypal_dict = {
                             "business": settings.PAYPAL_RECEIVER_EMAIL,
-                            "amount": total_amount_for_booking_in_usd,
+                            "amount": total_cost_room,
                             "item_name": f"room_id : {temp_booking.room.id}",
                             "invoice": str(temp_booking.id),
-                            'currency_code': 'USD',
+                            'currency_code': 'EUR',
                             "notify_url": f'http://{host}{reverse("paypal-ipn")}',
                             "return": f'http://{host}{reverse("payment_success", args=[temp_booking.id])}',
                             "cancel_return": f'http://{host}{reverse("index")}',
                         }
                         form = CustomPayPalPaymentsForm(initial=paypal_dict)
+                        
                         context = {
                             "form_paypal": form,
                             "booking": temp_booking,
