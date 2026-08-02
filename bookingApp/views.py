@@ -160,13 +160,14 @@ class Room_details_view(View):
 
     def post(self, request, *args, **kwargs):
         room_id = self.kwargs.get('id', None)
-        room_list = Room.objects.filter(id=room_id)
-        available_room = []
+
         form = AvailabilityForm(request.POST)
         payment_method_form = PaymentMethodForm(request.POST)
 
         formComment = CommentRoomForm(request.POST)
+
         room = get_object_or_404(Room, id=room_id)
+
         if formComment.is_valid():
             comment = formComment.save(commit=False)
             comment.user = self.request.user
@@ -177,11 +178,8 @@ class Room_details_view(View):
         if form.is_valid() and payment_method_form.is_valid():
             payment_method_chose = payment_method_form.cleaned_data['payment_method']
             data = form.cleaned_data
-    
-            for room in room_list:
-                if availability.booking_logic(room, data['check_in'], data['check_out']):
-                    available_room.append(room)
 
+            available_room = availability.booking_logic(room, data['check_in'], data['check_out'])
 
             paris_tz = pytz.timezone('Europe/Paris')
             today = timezone.now().astimezone(paris_tz)
@@ -204,8 +202,7 @@ class Room_details_view(View):
                     return HttpResponse('Invalid Booking, Date In and Date Out should be greater than or equal to today. Please try again.')
 
 
-                if len(available_room) > 0:
-                    room = available_room[0]
+                if available_room:
                     num_days = (data['check_out'] - data['check_in']).days
                     total_cost_room = room.price_per_night * num_days
 
@@ -233,7 +230,7 @@ class Room_details_view(View):
                             total=total_cost_room,
                         )
                         host = request.get_host()
-                        print(f"get host ====> {host}")
+                        # print(f"get host ====> {host}")
                         paypal_dict = {
                             "business": settings.PAYPAL_RECEIVER_EMAIL,
                             "amount": total_cost_room,
